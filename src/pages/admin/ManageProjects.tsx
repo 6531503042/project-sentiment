@@ -33,7 +33,7 @@ import {
   Breadcrumbs,
   BreadcrumbItem,
 } from "@nextui-org/react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { DashboardLayout } from "@/components/layouts/DashboardLayout";
 import {
   BarChart3,
   Users,
@@ -79,7 +79,7 @@ interface TeamMember {
   avatar: string;
 }
 
-const ManageProjects: React.FC = () => {
+const ManageProjects = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -110,21 +110,14 @@ const ManageProjects: React.FC = () => {
 
   const handleAddTeamMember = () => {
     const newMember: TeamMember = {
-      id: formData.team.length + 1,
+      id: Date.now(),
       name: "",
       role: "Member",
-      avatar: `https://i.pravatar.cc/150?u=${Math.random()}`,
+      avatar: `https://i.pravatar.cc/150?u=${Date.now()}`,
     };
     setFormData((prev) => ({
       ...prev,
       team: [...prev.team, newMember],
-    }));
-  };
-
-  const handleRemoveTeamMember = (id: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      team: prev.team.filter((member) => member.id !== id),
     }));
   };
 
@@ -137,19 +130,18 @@ const ManageProjects: React.FC = () => {
     }));
   };
 
+  const handleRemoveTeamMember = (id: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      team: prev.team.filter((member) => member.id !== id),
+    }));
+  };
+
   const handleSave = () => {
-    // Here you would typically make an API call to save the project
+    // Implement save functionality
     console.log("Saving project:", formData);
     onClose();
-    // Reset form after saving
-    setFormData({
-      name: "",
-      description: "",
-      startDate: "",
-      endDate: "",
-      status: "planning",
-      team: [],
-    });
+    resetForm();
   };
 
   const resetForm = () => {
@@ -351,67 +343,62 @@ const ManageProjects: React.FC = () => {
               <TableColumn>ACTIONS</TableColumn>
             </TableHeader>
             <TableBody>
-              {/* Example row */}
-              <TableRow key="1">
-                <TableCell>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold">Website Redesign</span>
-                    <span className="text-xs text-default-500">Due in 2 weeks</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <AvatarGroup max={3}>
-                    <Avatar size="sm" src="https://i.pravatar.cc/150?u=1" />
-                    <Avatar size="sm" src="https://i.pravatar.cc/150?u=2" />
-                    <Avatar size="sm" src="https://i.pravatar.cc/150?u=3" />
-                    <Avatar size="sm" src="https://i.pravatar.cc/150?u=4" />
-                  </AvatarGroup>
-                </TableCell>
-                <TableCell>
-                  <Chip color="warning" variant="flat" size="sm">
-                    In Progress
-                  </Chip>
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-col gap-2">
-                    <Progress
+              {filteredProjects.map((project) => (
+                <TableRow key={project.id}>
+                  <TableCell>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-semibold">{project.name}</span>
+                      <span className="text-xs text-default-500">{project.description}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <AvatarGroup max={3}>
+                      {project.team.map((member) => (
+                        <Avatar key={member.id} size="sm" src={member.avatar} />
+                      ))}
+                    </AvatarGroup>
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      color={getStatusColor(project.status)}
+                      variant="flat"
                       size="sm"
-                      value={75}
-                      color="primary"
-                      className="max-w-md"
-                    />
-                    <span className="text-xs text-default-500">75%</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    <Tooltip content="View Details">
-                      <Button isIconOnly variant="light" size="sm" onPress={() => console.log("View details")}>
-                        <Eye size={18} />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip content="Edit Project">
-                      <Button isIconOnly variant="light" size="sm" onPress={() => {
-                        setSelectedProject(projectData[0]);
-                        onOpen();
-                      }}>
-                        <Edit3 size={18} />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip content="Delete Project">
-                      <Button 
-                        isIconOnly 
-                        variant="light" 
-                        size="sm" 
-                        color="danger"
-                        onPress={() => console.log("Delete project")}
-                      >
-                        <Trash2 size={18} />
-                      </Button>
-                    </Tooltip>
-                  </div>
-                </TableCell>
-              </TableRow>
+                    >
+                      {project.status}
+                    </Chip>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-col gap-2">
+                      <Progress
+                        size="sm"
+                        value={project.progress}
+                        color="primary"
+                        className="max-w-md"
+                      />
+                      <span className="text-xs text-default-500">{project.progress}%</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <Tooltip content="View Details">
+                        <Button isIconOnly variant="light" size="sm">
+                          <Eye size={18} />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip content="Edit Project">
+                        <Button isIconOnly variant="light" size="sm">
+                          <Edit3 size={18} />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip content="Delete Project">
+                        <Button isIconOnly variant="light" size="sm" color="danger">
+                          <Trash2 size={18} />
+                        </Button>
+                      </Tooltip>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </Card>
@@ -435,14 +422,12 @@ const ManageProjects: React.FC = () => {
                 placeholder="Enter project name"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
-                isRequired
               />
               <Select
                 label="Status"
                 placeholder="Select status"
                 value={formData.status}
                 onChange={(e) => handleInputChange("status", e.target.value)}
-                isRequired
               >
                 <SelectItem key="planning" value="planning">Planning</SelectItem>
                 <SelectItem key="in-progress" value="in-progress">In Progress</SelectItem>
@@ -454,7 +439,6 @@ const ManageProjects: React.FC = () => {
                 value={formData.startDate}
                 onChange={(e) => handleInputChange("startDate", e.target.value)}
                 className="col-span-1"
-                isRequired
               />
               <Input
                 type="date"
@@ -462,7 +446,6 @@ const ManageProjects: React.FC = () => {
                 value={formData.endDate}
                 onChange={(e) => handleInputChange("endDate", e.target.value)}
                 className="col-span-1"
-                isRequired
               />
               <Textarea
                 label="Description"
@@ -470,7 +453,6 @@ const ManageProjects: React.FC = () => {
                 value={formData.description}
                 onChange={(e) => handleInputChange("description", e.target.value)}
                 className="col-span-2"
-                isRequired
               />
             </div>
 
@@ -495,37 +477,17 @@ const ManageProjects: React.FC = () => {
                     variant="flat"
                     avatar={<Avatar size="sm" src={member.avatar} />}
                   >
-                    {member.name || "New Member"} • {member.role}
+                    {member.name} • {member.role}
                   </Chip>
                 ))}
-                {formData.team.length === 0 && (
-                  <div className="text-center w-full py-4 text-default-400">
-                    No team members added yet
-                  </div>
-                )}
               </div>
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button variant="light" onPress={() => {
-              onClose();
-              setSelectedProject(null);
-              setFormData({
-                name: "",
-                description: "",
-                startDate: "",
-                endDate: "",
-                status: "planning",
-                team: []
-              });
-            }}>
+            <Button variant="light" onPress={onClose}>
               Cancel
             </Button>
-            <Button 
-              color="primary" 
-              onPress={handleSave}
-              isDisabled={!formData.name || !formData.description || !formData.startDate || !formData.endDate}
-            >
+            <Button color="primary" onPress={handleSave}>
               {selectedProject ? "Save Changes" : "Create Project"}
             </Button>
           </ModalFooter>
