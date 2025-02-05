@@ -1,11 +1,45 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { Header } from "@/components/layout/Header";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Calendar, ArrowRight, CheckCircle, Clock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+interface FeedbackItem {
+  id: number;
+  name: string;
+  description: string;
+  dueDate: string;
+  status: "pending" | "completed";
+  projectName: string;
+}
 
 const EmployeeFeedback = () => {
+  const navigate = useNavigate();
+  
+  const pendingFeedbacks: FeedbackItem[] = [
+    {
+      id: 1,
+      name: "Employee Satisfaction Survey 2024",
+      description: "Share your thoughts about your work experience",
+      dueDate: "2024-02-28",
+      status: "pending",
+      projectName: "Company Culture Initiative",
+    },
+  ];
+
+  const completedFeedbacks: FeedbackItem[] = [
+    {
+      id: 2,
+      name: "Q4 2023 Project Review",
+      description: "Project feedback and improvement suggestions",
+      dueDate: "2023-12-15",
+      status: "completed",
+      projectName: "Digital Transformation",
+    },
+  ];
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-ata-gray">
@@ -18,35 +52,84 @@ const EmployeeFeedback = () => {
               <p className="text-ata-text mt-2">View and complete your feedback requests</p>
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-8">
               <div>
-                <h2 className="text-lg font-semibold mb-4">Pending Feedback</h2>
+                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-yellow-500" />
+                  Pending Feedback
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Card className="p-6">
-                    <h3 className="font-semibold text-lg mb-2">Employee Satisfaction Survey 2024</h3>
-                    <p className="text-sm text-ata-text mb-4">Share your thoughts about your work experience</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-ata-text">Due: Feb 28, 2024</span>
-                      <Button className="flex items-center gap-2">
-                        Start
-                        <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </Card>
+                  {pendingFeedbacks.map((feedback) => (
+                    <Card key={feedback.id} className="p-6">
+                      <div className="space-y-4">
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="font-semibold text-lg text-ata-blue">{feedback.name}</h3>
+                            <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
+                              Pending
+                            </span>
+                          </div>
+                          <p className="text-sm text-ata-text">{feedback.description}</p>
+                        </div>
+                        
+                        <div className="text-sm text-ata-text">
+                          <p className="mb-1">Project: {feedback.projectName}</p>
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4" />
+                            <span>Due: {new Date(feedback.dueDate).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+
+                        <Button
+                          className="w-full flex items-center justify-center gap-2"
+                          onClick={() => navigate(`/employee/feedback/${feedback.id}`)}
+                        >
+                          Start Feedback
+                          <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
                 </div>
               </div>
               
               <div>
-                <h2 className="text-lg font-semibold mb-4">Completed Feedback</h2>
+                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  Completed Feedback
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Card className="p-6 opacity-75">
-                    <h3 className="font-semibold text-lg mb-2">Q4 2023 Project Review</h3>
-                    <p className="text-sm text-ata-text mb-4">Project feedback and improvement suggestions</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-ata-text">Completed: Dec 15, 2023</span>
-                      <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">Submitted</span>
-                    </div>
-                  </Card>
+                  {completedFeedbacks.map((feedback) => (
+                    <Card key={feedback.id} className="p-6 opacity-75">
+                      <div className="space-y-4">
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="font-semibold text-lg text-ata-blue">{feedback.name}</h3>
+                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                              Completed
+                            </span>
+                          </div>
+                          <p className="text-sm text-ata-text">{feedback.description}</p>
+                        </div>
+                        
+                        <div className="text-sm text-ata-text">
+                          <p className="mb-1">Project: {feedback.projectName}</p>
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4" />
+                            <span>Completed: {new Date(feedback.dueDate).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => navigate(`/employee/feedback/${feedback.id}`)}
+                        >
+                          View Feedback
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
                 </div>
               </div>
             </div>

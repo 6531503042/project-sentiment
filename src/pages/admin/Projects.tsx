@@ -14,9 +14,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Calendar, Users } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus, Calendar, Users, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+
+interface TeamMember {
+  id: number;
+  name: string;
+  role: string;
+}
 
 interface Project {
   id: number;
@@ -25,6 +38,7 @@ interface Project {
   startDate: string;
   endDate: string;
   status: "active" | "completed" | "upcoming";
+  teamMembers: TeamMember[];
 }
 
 const Projects = () => {
@@ -37,6 +51,10 @@ const Projects = () => {
       startDate: "2024-02-01",
       endDate: "2024-02-28",
       status: "active",
+      teamMembers: [
+        { id: 1, name: "John Doe", role: "Team Lead" },
+        { id: 2, name: "Jane Smith", role: "HR Manager" },
+      ],
     },
   ]);
 
@@ -50,6 +68,7 @@ const Projects = () => {
       startDate: formData.get("startDate") as string,
       endDate: formData.get("endDate") as string,
       status: "upcoming" as const,
+      teamMembers: [],
     };
     
     setProjects([...projects, newProject]);
@@ -78,12 +97,12 @@ const Projects = () => {
                     New Project
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[525px]">
+                <DialogContent className="sm:max-w-[600px]">
                   <form onSubmit={handleCreateProject}>
                     <DialogHeader>
                       <DialogTitle>Create New Project</DialogTitle>
                       <DialogDescription>
-                        Create a new feedback project for your team.
+                        Create a new feedback project and assign team members.
                       </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
@@ -133,6 +152,21 @@ const Projects = () => {
                           />
                         </div>
                       </div>
+                      <div className="space-y-2">
+                        <label htmlFor="team" className="text-sm font-medium">
+                          Team Members
+                        </label>
+                        <Select name="team">
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select team members" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="john">John Doe</SelectItem>
+                            <SelectItem value="jane">Jane Smith</SelectItem>
+                            <SelectItem value="bob">Bob Johnson</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                     <DialogFooter>
                       <Button type="submit">Create Project</Button>
@@ -156,17 +190,22 @@ const Projects = () => {
                       <span>{new Date(project.startDate).toLocaleDateString()} - {new Date(project.endDate).toLocaleDateString()}</span>
                     </div>
                     
+                    <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4 text-ata-text" />
+                      <span className="text-sm text-ata-text">{project.teamMembers.length} members</span>
+                    </div>
+
                     <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-ata-text" />
-                        <span className="text-sm text-ata-text">12 members</span>
-                      </div>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium
                         ${project.status === 'active' ? 'bg-green-100 text-green-800' : 
                           project.status === 'completed' ? 'bg-gray-100 text-gray-800' :
                           'bg-blue-100 text-blue-800'}`}>
                         {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
                       </span>
+                      <Button variant="ghost" size="sm" className="flex items-center gap-1">
+                        View Details
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </Card>
