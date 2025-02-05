@@ -14,6 +14,9 @@ import Feedback from "./pages/admin/Feedback";
 import FeedbackDashboard from "./pages/admin/FeedbackDashboard";
 import EmployeeFeedback from "./pages/employee/EmployeeFeedback";
 import FeedbackForm from "./pages/employee/FeedbackForm";
+import ManageProjects from "./pages/admin/ManageProjects";
+import ManageQuestions from "./pages/admin/ManageQuestions";
+import ManageFeedback from "./pages/admin/ManageFeedback";
 import { AppSidebar } from "./components/layout/AppSidebar";
 import { Header } from "./components/layout/Header";
 
@@ -35,10 +38,13 @@ const App = () => (
                       <Route path="/" element={<Index />} />
                       <Route path="/admin/projects" element={<Projects />} />
                       <Route path="/admin/projects/dashboard" element={<ProjectDashboard />} />
+                      <Route path="/admin/projects/manage" element={<ManageProjects />} />
                       <Route path="/admin/questions" element={<Questions />} />
                       <Route path="/admin/questions/dashboard" element={<QuestionDashboard />} />
+                      <Route path="/admin/questions/manage" element={<ManageQuestions />} />
                       <Route path="/admin/feedback" element={<Feedback />} />
                       <Route path="/admin/feedback/dashboard" element={<FeedbackDashboard />} />
+                      <Route path="/admin/feedback/manage" element={<ManageFeedback />} />
                       <Route path="/employee/feedback" element={<EmployeeFeedback />} />
                       <Route path="/employee/feedback/:id" element={<FeedbackForm />} />
                       <Route path="*" element={<NotFound />} />
