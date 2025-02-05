@@ -9,6 +9,7 @@ import {
   DropdownItem,
   Badge,
   Tooltip,
+  Divider,
 } from "@nextui-org/react";
 import {
   Bell,
@@ -19,6 +20,7 @@ import {
   HelpCircle,
   LogOut,
   MessageSquare,
+  User,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -26,8 +28,9 @@ export const Header: FC = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <header className="w-full border-b bg-background/70 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+    <header className="w-full border-b border-divider bg-background/70 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 z-40">
       <div className="flex h-16 items-center gap-4 px-6">
+        {/* Search */}
         <div className="flex-1 flex items-center gap-4">
           <div className="w-72 max-w-full">
             <Input
@@ -46,7 +49,9 @@ export const Header: FC = () => {
           </div>
         </div>
 
+        {/* Actions */}
         <div className="flex items-center gap-3">
+          {/* Theme Toggle */}
           <Tooltip content={theme === "light" ? "Dark mode" : "Light mode"}>
             <Button
               isIconOnly
@@ -58,6 +63,18 @@ export const Header: FC = () => {
             </Button>
           </Tooltip>
 
+          {/* Help */}
+          <Tooltip content="Help">
+            <Button
+              isIconOnly
+              variant="light"
+              size="sm"
+            >
+              <HelpCircle size={20} />
+            </Button>
+          </Tooltip>
+
+          {/* Notifications */}
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
               <Button
@@ -67,7 +84,7 @@ export const Header: FC = () => {
                 radius="full"
               >
                 <Badge
-                  content="3"
+                  content="5"
                   size="sm"
                   color="danger"
                   shape="circle"
@@ -100,22 +117,24 @@ export const Header: FC = () => {
                 }
               >
                 <span className="font-semibold">New Feedback</span>
-                <p className="text-xs text-default-500 mt-1">1 hour ago</p>
+                <p className="text-xs text-default-500 mt-1">5 minutes ago</p>
+              </DropdownItem>
+              <DropdownItem
+                key="team_update"
+                description="Team member role updated"
+                startContent={
+                  <div className="w-8 h-8 rounded-full bg-warning/10 text-warning flex items-center justify-center">
+                    <User size={16} />
+                  </div>
+                }
+              >
+                <span className="font-semibold">Team Update</span>
+                <p className="text-xs text-default-500 mt-1">10 minutes ago</p>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
 
-          <Tooltip content="Help">
-            <Button
-              isIconOnly
-              variant="light"
-              size="sm"
-              radius="full"
-            >
-              <HelpCircle size={20} />
-            </Button>
-          </Tooltip>
-
+          {/* User Menu */}
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
               <Avatar
@@ -124,30 +143,24 @@ export const Header: FC = () => {
                 color="primary"
                 name="John Doe"
                 size="sm"
-                src="https://i.pravatar.cc/150?img=3"
+                src="https://i.pravatar.cc/150?u=1"
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-semibold">John Doe</p>
-                <p className="text-sm text-default-500">john.doe@example.com</p>
+                <p className="font-semibold">Signed in as</p>
+                <p className="font-semibold">john.doe@example.com</p>
               </DropdownItem>
-              <DropdownItem
-                key="settings"
-                startContent={<Settings size={16} />}
-              >
+              <DropdownItem key="settings" startContent={<Settings size={16} />}>
                 Settings
               </DropdownItem>
-              <DropdownItem
-                key="help_and_feedback"
-                startContent={<HelpCircle size={16} />}
-              >
+              <DropdownItem key="help_and_feedback" startContent={<HelpCircle size={16} />}>
                 Help & Feedback
               </DropdownItem>
               <DropdownItem
                 key="logout"
-                className="text-danger"
                 color="danger"
+                className="text-danger"
                 startContent={<LogOut size={16} />}
               >
                 Log Out
