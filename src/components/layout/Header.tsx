@@ -18,6 +18,7 @@ import {
   Settings,
   HelpCircle,
   LogOut,
+  MessageSquare,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 
