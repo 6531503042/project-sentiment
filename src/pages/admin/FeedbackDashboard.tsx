@@ -19,7 +19,7 @@ import {
   AreaChart,
   Legend,
 } from "recharts";
-import { MessageSquare, TrendingUp, Users } from "lucide-react";
+import { MessageSquare as MessageSquareIcon, TrendingUp, Users } from "lucide-react";
 
 const FeedbackDashboard = () => {
   const sentimentData = [
@@ -97,7 +97,7 @@ const FeedbackDashboard = () => {
             <Card className="bg-gradient-to-r from-purple-100 to-purple-50 mb-8 p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-purple-500 rounded-lg">
-                  <MessageSquare className="h-6 w-6 text-white" />
+                  <MessageSquareIcon className="h-6 w-6 text-white" />
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold text-purple-900">AI-Powered Insights</h2>
@@ -157,7 +157,7 @@ const FeedbackDashboard = () => {
               <Card className="p-6">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-purple-100 rounded-lg">
-                    <MessageSquare className="h-5 w-5 text-purple-600" />
+                    <MessageSquareIcon className="h-5 w-5 text-purple-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">Active Campaigns</h3>
