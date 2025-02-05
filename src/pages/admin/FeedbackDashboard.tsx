@@ -17,6 +17,7 @@ import {
   Line,
   Area,
   AreaChart,
+  Legend,
 } from "recharts";
 import { MessageSquare, TrendingUp, Users } from "lucide-react";
 
