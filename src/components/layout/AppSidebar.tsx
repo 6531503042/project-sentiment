@@ -1,4 +1,4 @@
-import { Home, BarChart3, FileText, Users, Settings } from "lucide-react";
+import { Home, BarChart3, FileText, Users, MessageCircle, Settings } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,8 +12,9 @@ import {
 
 const adminMenuItems = [
   { title: "Dashboard", icon: Home, url: "/" },
-  { title: "Projects", icon: FileText, url: "/projects" },
-  { title: "Questions", icon: BarChart3, url: "/questions" },
+  { title: "Projects", icon: FileText, url: "/admin/projects" },
+  { title: "Questions", icon: MessageCircle, url: "/admin/questions" },
+  { title: "Feedback", icon: BarChart3, url: "/admin/feedback" },
   { title: "Team", icon: Users, url: "/team" },
   { title: "Settings", icon: Settings, url: "/settings" },
 ];
