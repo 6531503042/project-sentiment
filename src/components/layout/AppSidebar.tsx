@@ -10,27 +10,30 @@ import {
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import {
-  LayoutDashboard,
+  Home,
   BarChart2,
-  ClipboardList,
+  Users,
   MessageSquare,
   Settings,
   LogOut,
   ChevronLeft,
   ChevronRight,
-  ListChecks,
+  PieChart,
+  ListTodo,
   MessageCircle,
-  ChevronDown,
 } from "lucide-react";
+
+interface SubNavItem {
+  label: string;
+  href: string;
+  icon: JSX.Element;
+  description: string;
+}
 
 interface NavItem {
   label: string;
   icon: JSX.Element;
-  items: {
-    label: string;
-    href: string;
-    icon: JSX.Element;
-  }[];
+  items: SubNavItem[];
 }
 
 const adminNavItems: NavItem[] = [
@@ -39,14 +42,22 @@ const adminNavItems: NavItem[] = [
     icon: <BarChart2 size={22} />,
     items: [
       {
-        label: "Dashboard",
-        href: "/admin/projects/dashboard",
-        icon: <LayoutDashboard size={18} />
+        label: "Overview",
+        href: "/admin/projects",
+        icon: <PieChart size={18} />,
+        description: "Project statistics and overview"
       },
       {
         label: "Manage",
         href: "/admin/projects/manage",
-        icon: <ClipboardList size={18} />
+        icon: <ListTodo size={18} />,
+        description: "Manage project details"
+      },
+      {
+        label: "Dashboard",
+        href: "/admin/projects/dashboard",
+        icon: <BarChart2 size={18} />,
+        description: "Project analytics dashboard"
       }
     ]
   },
@@ -55,14 +66,22 @@ const adminNavItems: NavItem[] = [
     icon: <MessageSquare size={22} />,
     items: [
       {
-        label: "Dashboard",
-        href: "/admin/questions/dashboard",
-        icon: <LayoutDashboard size={18} />
+        label: "Overview",
+        href: "/admin/questions",
+        icon: <PieChart size={18} />,
+        description: "Question bank overview"
       },
       {
         label: "Manage",
         href: "/admin/questions/manage",
-        icon: <ListChecks size={18} />
+        icon: <ListTodo size={18} />,
+        description: "Manage survey questions"
+      },
+      {
+        label: "Dashboard",
+        href: "/admin/questions/dashboard",
+        icon: <BarChart2 size={18} />,
+        description: "Question analytics"
       }
     ]
   },
@@ -71,14 +90,22 @@ const adminNavItems: NavItem[] = [
     icon: <MessageCircle size={22} />,
     items: [
       {
-        label: "Dashboard",
-        href: "/admin/feedback/dashboard",
-        icon: <LayoutDashboard size={18} />
+        label: "Overview",
+        href: "/admin/feedback",
+        icon: <PieChart size={18} />,
+        description: "Feedback overview"
       },
       {
         label: "Manage",
         href: "/admin/feedback/manage",
-        icon: <ClipboardList size={18} />
+        icon: <ListTodo size={18} />,
+        description: "Manage feedback responses"
+      },
+      {
+        label: "Dashboard",
+        href: "/admin/feedback/dashboard",
+        icon: <BarChart2 size={18} />,
+        description: "Feedback analytics"
       }
     ]
   }
@@ -87,8 +114,6 @@ const adminNavItems: NavItem[] = [
 export const AppSidebar: FC = () => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const isActive = (path: string) => location.pathname === path;
 
   return (
     <motion.div
@@ -126,7 +151,6 @@ export const AppSidebar: FC = () => {
           <Accordion 
             selectionMode="multiple" 
             className="px-0"
-            defaultExpandedKeys={["0", "1", "2"]}
             itemClasses={{
               base: "py-0 w-full",
               title: "font-normal text-base",
@@ -137,7 +161,7 @@ export const AppSidebar: FC = () => {
           >
             {adminNavItems.map((section, index) => (
               <AccordionItem
-                key={index}
+                key={section.label}
                 aria-label={section.label}
                 title={
                   <div className="flex items-center gap-2">
@@ -145,7 +169,6 @@ export const AppSidebar: FC = () => {
                     <span>{section.label}</span>
                   </div>
                 }
-                indicator={<ChevronDown size={18} />}
               >
                 <div className="flex flex-col gap-1 pl-2">
                   {section.items.map((item) => (
@@ -160,11 +183,11 @@ export const AppSidebar: FC = () => {
                       >
                         <Button
                           className={`w-full justify-start gap-2 h-10 ${
-                            isActive(item.href)
+                            location.pathname === item.href
                               ? 'bg-primary text-white'
                               : 'bg-transparent hover:bg-default-100'
                           }`}
-                          variant={isActive(item.href) ? "solid" : "light"}
+                          variant={location.pathname === item.href ? "solid" : "light"}
                           startContent={item.icon}
                           size="sm"
                         >
@@ -180,9 +203,9 @@ export const AppSidebar: FC = () => {
         ) : (
           // Collapsed view
           <div className="flex flex-col items-center gap-2">
-            {adminNavItems.map((section, index) => (
+            {adminNavItems.map((section) => (
               <Tooltip
-                key={index}
+                key={section.label}
                 content={section.label}
                 placement="right"
                 delay={200}
