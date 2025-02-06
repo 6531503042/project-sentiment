@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
 import {
@@ -57,7 +58,7 @@ const QuestionDashboard = () => {
       value: "88%",
       trend: "+3%",
       description: "Active participation across departments",
-      icon: <ArrowUpTrendingIcon className="w-6 h-6 text-blue-500" />,
+      icon: <ArrowTrendingUpIcon className="w-6 h-6 text-blue-500" />,
     },
     {
       title: "Sentiment Score",
