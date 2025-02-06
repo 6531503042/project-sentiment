@@ -2,6 +2,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { Header } from "@/components/layout/Header";
 import { Card } from "@/components/ui/card";
+import { MessageSquare } from "lucide-react";
 import {
   BarChart,
   Bar,
