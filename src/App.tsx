@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -6,7 +7,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import Projects from "./pages/admin/Projects";
+import Projects from "./pages/admin/project/Projects";
 import ProjectDashboard from "./pages/admin/ProjectDashboard";
 import Questions from "./pages/admin/Questions";
 import QuestionDashboard from "./pages/admin/QuestionDashboard";
