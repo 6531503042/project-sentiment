@@ -1,6 +1,6 @@
+
 import { FC } from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { Link, useLocation } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -92,7 +92,7 @@ const navItems: NavItem[] = [
 ];
 
 export const AppSidebar: FC = () => {
-  const pathname = usePathname();
+  const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeGroup, setActiveGroup] = useState<string | null>(null);
 
@@ -152,18 +152,19 @@ export const AppSidebar: FC = () => {
                 className="ml-6 flex flex-col gap-1"
               >
                 {item.children.map((child) => (
-                  <Link key={child.href} href={child.href}>
-                    <Button
-                      variant="light"
-                      className={cn(
-                        "w-full justify-start gap-2 h-9 px-4",
-                        pathname === child.href && "bg-primary/10 text-primary"
-                      )}
-                    >
-                      {child.icon}
-                      <span className="font-medium">{child.label}</span>
-                    </Button>
-                  </Link>
+                  <Button
+                    key={child.href}
+                    as={Link}
+                    to={child.href}
+                    variant="light"
+                    className={cn(
+                      "w-full justify-start gap-2 h-9 px-4",
+                      location.pathname === child.href && "bg-primary/10 text-primary"
+                    )}
+                  >
+                    {child.icon}
+                    <span className="font-medium">{child.label}</span>
+                  </Button>
                 ))}
               </motion.div>
             )}
@@ -177,7 +178,7 @@ export const AppSidebar: FC = () => {
         <Button
           variant="light"
           className="w-full justify-start gap-2 h-11"
-          href="/settings"
+          to="/settings"
           as={Link}
         >
           <Settings size={22} />
