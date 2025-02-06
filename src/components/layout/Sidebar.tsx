@@ -1,6 +1,6 @@
+
 import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { Link, useLocation } from "react-router-dom";
 import {
   ChartPieIcon,
   QuestionMarkCircleIcon,
@@ -38,7 +38,7 @@ const menuItems = [
 
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const router = useRouter();
+  const location = useLocation();
 
   return (
     <div
@@ -72,11 +72,11 @@ const Sidebar = () => {
         <nav className="flex-1 px-2 py-4">
           <ul className="space-y-1">
             {menuItems.map((item) => {
-              const isActive = router.pathname.startsWith(item.path);
+              const isActive = location.pathname.startsWith(item.path);
               return (
                 <li key={item.path}>
                   <Link
-                    href={item.path}
+                    to={item.path}
                     className={cn(
                       "flex items-center px-3 py-2 rounded-lg transition-all duration-200",
                       "hover:bg-gray-700/50",
