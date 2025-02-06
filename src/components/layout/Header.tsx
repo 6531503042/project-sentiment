@@ -1,174 +1,21 @@
-import { FC } from "react";
-import {
-  Avatar,
-  Button,
-  Input,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Badge,
-  Tooltip,
-  Divider,
-} from "@nextui-org/react";
-import {
-  Bell,
-  Search,
-  Sun,
-  Moon,
-  Settings,
-  HelpCircle,
-  LogOut,
-  MessageSquare,
-  User,
-} from "lucide-react";
-import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
-export const Header: FC = () => {
-  const { theme, setTheme } = useTheme();
-
+export function Header() {
   return (
-    <header className="w-full border-b border-divider bg-background/70 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 z-40">
-      <div className="flex h-16 items-center gap-4 px-6">
-        {/* Search */}
-        <div className="flex-1 flex items-center gap-4">
-          <div className="w-72 max-w-full">
-            <Input
-              classNames={{
-                base: "max-w-full h-10",
-                mainWrapper: "h-10",
-                input: "text-small",
-                inputWrapper: "h-10 bg-default-100",
-              }}
-              placeholder="Search anything..."
-              size="sm"
-              startContent={<Search size={18} className="text-default-400" />}
-              type="search"
-              variant="bordered"
-            />
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center gap-3">
-          {/* Theme Toggle */}
-          <Tooltip content={theme === "light" ? "Dark mode" : "Light mode"}>
-            <Button
-              isIconOnly
-              variant="light"
-              size="sm"
-              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            >
-              {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-            </Button>
-          </Tooltip>
-
-          {/* Help */}
-          <Tooltip content="Help">
-            <Button
-              isIconOnly
-              variant="light"
-              size="sm"
-            >
-              <HelpCircle size={20} />
-            </Button>
-          </Tooltip>
-
-          {/* Notifications */}
-          <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <Button
-                isIconOnly
-                variant="light"
-                size="sm"
-                radius="full"
-              >
-                <Badge
-                  content="5"
-                  size="sm"
-                  color="danger"
-                  shape="circle"
-                  placement="top-right"
-                >
-                  <Bell size={20} />
-                </Badge>
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Notifications" className="w-80">
-              <DropdownItem
-                key="new_project"
-                description="A new project has been created"
-                startContent={
-                  <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                    <Bell size={16} />
-                  </div>
-                }
-              >
-                <span className="font-semibold">New Project Added</span>
-                <p className="text-xs text-default-500 mt-1">2 minutes ago</p>
-              </DropdownItem>
-              <DropdownItem
-                key="feedback"
-                description="John Doe submitted feedback"
-                startContent={
-                  <div className="w-8 h-8 rounded-full bg-success/10 text-success flex items-center justify-center">
-                    <MessageSquare size={16} />
-                  </div>
-                }
-              >
-                <span className="font-semibold">New Feedback</span>
-                <p className="text-xs text-default-500 mt-1">5 minutes ago</p>
-              </DropdownItem>
-              <DropdownItem
-                key="team_update"
-                description="Team member role updated"
-                startContent={
-                  <div className="w-8 h-8 rounded-full bg-warning/10 text-warning flex items-center justify-center">
-                    <User size={16} />
-                  </div>
-                }
-              >
-                <span className="font-semibold">Team Update</span>
-                <p className="text-xs text-default-500 mt-1">10 minutes ago</p>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-
-          {/* User Menu */}
-          <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <Avatar
-                as="button"
-                className="transition-transform"
-                color="primary"
-                name="John Doe"
-                size="sm"
-                src="https://i.pravatar.cc/150?u=1"
-              />
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">john.doe@example.com</p>
-              </DropdownItem>
-              <DropdownItem key="settings" startContent={<Settings size={16} />}>
-                Settings
-              </DropdownItem>
-              <DropdownItem key="help_and_feedback" startContent={<HelpCircle size={16} />}>
-                Help & Feedback
-              </DropdownItem>
-              <DropdownItem
-                key="logout"
-                color="danger"
-                className="text-danger"
-                startContent={<LogOut size={16} />}
-              >
-                Log Out
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+    <header className="border-b bg-white">
+      <div className="flex h-16 items-center px-4 gap-4">
+        <SidebarTrigger>
+          <Button variant="ghost" size="icon">
+            <Menu className="h-6 w-6" />
+          </Button>
+        </SidebarTrigger>
+        <div className="flex items-center gap-2">
+          <img src="/lovable-uploads/b7c0e55a-a6be-48d9-ace3-b9d27962760e.png" alt="ATA Logo" className="h-8" />
+          <span className="font-semibold text-ata-blue">Feedback System</span>
         </div>
       </div>
     </header>
   );
-};
+}
