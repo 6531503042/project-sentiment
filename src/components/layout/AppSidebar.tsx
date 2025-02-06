@@ -1,189 +1,168 @@
-import { FC } from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Tooltip,
-  Card,
-} from "@nextui-org/react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
+  FolderKanban,
   MessageSquare,
-  ThumbsUp,
-  ChevronLeft,
-  ChevronRight,
+  FileText,
+  ChevronDown,
   Settings,
 } from "lucide-react";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface NavItem {
   label: string;
-  href: string;
-  icon: JSX.Element;
-  description: string;
-  children?: NavItem[];
+  href?: string;
+  icon?: React.ReactNode;
+  children?: {
+    label: string;
+    href: string;
+  }[];
 }
 
-const navItems: NavItem[] = [
-  {
-    label: "Projects",
-    href: "/manage/dashboard",
-    icon: <LayoutDashboard size={22} />,
-    description: "Project Management",
-    children: [
-      {
-        label: "Overview",
-        href: "/manage/dashboard",
-        icon: <LayoutDashboard size={20} />,
-        description: "Project Overview"
-      },
-      {
-        label: "Analytics",
-        href: "/manage/dashboard/analytics",
-        icon: <LayoutDashboard size={20} />,
-        description: "Project Analytics"
-      }
-    ]
-  },
-  {
-    label: "Feedback",
-    href: "/manage/dashboard",
-    icon: <ThumbsUp size={22} />,
-    description: "Feedback Management",
-    children: [
-      {
-        label: "All Feedback",
-        href: "/manage/dashboard/feedback",
-        icon: <ThumbsUp size={20} />,
-        description: "View All Feedback"
-      },
-      {
-        label: "Reports",
-        href: "/manage/dashboard/feedback/reports",
-        icon: <ThumbsUp size={20} />,
-        description: "Feedback Reports"
-      }
-    ]
-  },
-  {
-    label: "Questions",
-    href: "/manage/dashboard",
-    icon: <MessageSquare size={22} />,
-    description: "Question Management",
-    children: [
-      {
-        label: "Question Bank",
-        href: "/manage/dashboard/questions",
-        icon: <MessageSquare size={20} />,
-        description: "Manage Questions"
-      },
-      {
-        label: "Templates",
-        href: "/manage/dashboard/questions/templates",
-        icon: <MessageSquare size={20} />,
-        description: "Question Templates"
-      }
-    ]
-  },
-];
+export function AppSidebar() {
+  const location = useLocation();
+  const [openMenus, setOpenMenus] = useState<string[]>([]);
 
-export const AppSidebar: FC = () => {
-  const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeGroup, setActiveGroup] = useState<string | null>(null);
+  const toggleMenu = (label: string) => {
+    setOpenMenus(prev =>
+      prev.includes(label)
+        ? prev.filter(item => item !== label)
+        : [...prev, label]
+    );
+  };
+
+  const navItems: NavItem[] = [
+    {
+      label: "Dashboard",
+      href: "/",
+      icon: <LayoutDashboard className="w-5 h-5" />,
+    },
+    {
+      label: "Projects",
+      icon: <FolderKanban className="w-5 h-5" />,
+      children: [
+        { label: "Manage", href: "/admin/projects" },
+        { label: "Dashboard", href: "/admin/projects/dashboard" },
+      ],
+    },
+    {
+      label: "Questions",
+      icon: <MessageSquare className="w-5 h-5" />,
+      children: [
+        { label: "Manage", href: "/admin/questions" },
+        { label: "Dashboard", href: "/admin/questions/dashboard" },
+      ],
+    },
+    {
+      label: "Feedback",
+      icon: <FileText className="w-5 h-5" />,
+      children: [
+        { label: "Manage", href: "/admin/feedback" },
+        { label: "Dashboard", href: "/admin/feedback/dashboard" },
+      ],
+    },
+    {
+      label: "Settings",
+      href: "/settings",
+      icon: <Settings className="w-5 h-5" />,
+    },
+  ];
+
+  const isActive = (href: string) => location.pathname === href;
 
   return (
-    <motion.div
-      initial={false}
-      animate={{ width: isCollapsed ? "80px" : "280px" }}
-      className="relative h-screen bg-background border-r flex flex-col"
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-    >
-      {/* Collapse Button */}
-      <Button
-        isIconOnly
-        variant="light"
-        className="absolute -right-3 top-6 z-50 bg-background border shadow-md hover:bg-primary/10"
-        size="sm"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-      >
-        {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-      </Button>
-
-      {/* Logo Section */}
-      <div className={`p-6 flex items-center ${isCollapsed ? 'justify-center' : 'justify-start'}`}>
-        <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-          <span className="text-white font-bold text-xl">S</span>
-        </div>
-        {!isCollapsed && (
-          <span className="ml-3 font-semibold text-xl">Sentiment</span>
-        )}
-      </div>
-
-      <Divider className="my-2" />
-
-      {/* Navigation Items */}
-      <div className="flex-1 px-3 py-4 flex flex-col gap-2 overflow-y-auto">
-        {navItems.map((item) => (
-          <div key={item.href} className="w-full">
-            <Button
-              variant="light"
-              className={cn(
-                "w-full justify-start gap-2 h-11 px-4 mb-1",
-                activeGroup === item.label && "bg-primary/10 text-primary"
-              )}
-              onClick={() => setActiveGroup(activeGroup === item.label ? null : item.label)}
-            >
-              {item.icon}
-              {!isCollapsed && (
-                <span className="font-medium">{item.label}</span>
-              )}
-            </Button>
-            
-            {!isCollapsed && activeGroup === item.label && item.children && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="ml-6 flex flex-col gap-1"
-              >
-                {item.children.map((child) => (
-                  <Link key={child.href} href={child.href}>
-                    <Button
-                      variant="light"
-                      className={cn(
-                        "w-full justify-start gap-2 h-9 px-4",
-                        pathname === child.href && "bg-primary/10 text-primary"
-                      )}
-                    >
-                      {child.icon}
-                      <span className="font-medium">{child.label}</span>
-                    </Button>
-                  </Link>
-                ))}
-              </motion.div>
-            )}
+    <div className="w-64 border-r bg-card flex flex-col h-screen">
+      {/* Logo and Brand */}
+      <div className="p-6 border-b">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+            <span className="text-primary-foreground font-bold">ATA</span>
           </div>
-        ))}
+          <span className="font-semibold text-lg">Feedback</span>
+        </div>
       </div>
 
-      {/* Settings Section */}
-      <Divider className="my-2" />
-      <div className="p-4">
-        <Button
-          variant="light"
-          className="w-full justify-start gap-2 h-11"
-          href="/settings"
-          as={Link}
-        >
-          <Settings size={22} />
-          {!isCollapsed && <span className="font-medium">Settings</span>}
-        </Button>
+      {/* Navigation */}
+      <ScrollArea className="flex-1 py-2">
+        <nav className="space-y-1 px-2">
+          {navItems.map((item, index) => (
+            <div key={index}>
+              {item.children ? (
+                <div className="space-y-1">
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "w-full justify-between font-normal hover:bg-accent/50",
+                      openMenus.includes(item.label) && "bg-accent"
+                    )}
+                    onClick={() => toggleMenu(item.label)}
+                  >
+                    <span className="flex items-center gap-3">
+                      {item.icon}
+                      {item.label}
+                    </span>
+                    <ChevronDown
+                      className={cn(
+                        "w-4 h-4 transition-transform",
+                        openMenus.includes(item.label) && "transform rotate-180"
+                      )}
+                    />
+                  </Button>
+                  {openMenus.includes(item.label) && (
+                    <div className="pl-9 space-y-1">
+                      {item.children.map((child, childIndex) => (
+                        <Link
+                          key={childIndex}
+                          to={child.href}
+                          className={cn(
+                            "block px-4 py-2 text-sm rounded-md transition-colors",
+                            isActive(child.href)
+                              ? "bg-accent text-accent-foreground"
+                              : "text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"
+                          )}
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  to={item.href!}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                    isActive(item.href!)
+                      ? "bg-accent text-accent-foreground"
+                      : "text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"
+                  )}
+                >
+                  {item.icon}
+                  {item.label}
+                </Link>
+              )}
+            </div>
+          ))}
+        </nav>
+      </ScrollArea>
+
+      {/* User Profile */}
+      <div className="p-4 border-t mt-auto">
+        <div className="flex items-center gap-3">
+          <Avatar>
+            <AvatarImage src="/avatars/user.png" />
+            <AvatarFallback>JD</AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium">John Doe</p>
+            <p className="text-xs text-muted-foreground truncate">john.doe@ata.com</p>
+          </div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
-};
+}

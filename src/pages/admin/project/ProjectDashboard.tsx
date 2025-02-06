@@ -1,5 +1,4 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/layout/AppSidebar";
+
 import { Header } from "@/components/layout/Header";
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
@@ -22,9 +21,7 @@ const ProjectDashboard = () => {
   const COLORS = ["#4CAF50", "#FFC107", "#EF5350"];
 
   return (
-    <SidebarProvider>
       <div className="min-h-screen flex w-full bg-ata-gray">
-        <AppSidebar />
         <div className="flex-1">
           <Header />
           <main className="p-6">
@@ -97,7 +94,6 @@ const ProjectDashboard = () => {
           </main>
         </div>
       </div>
-    </SidebarProvider>
   );
 };
 

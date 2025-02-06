@@ -1,159 +1,48 @@
 import { FC } from "react";
+import { Button } from "@/components/ui/button";
 import {
-  Avatar,
-  Button,
-  Input,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Badge,
-  Tooltip,
-} from "@nextui-org/react";
-import {
-  Bell,
-  Search,
-  Sun,
-  Moon,
-  Settings,
-  HelpCircle,
-  LogOut,
-  MessageSquare,
-} from "lucide-react";
-import { useTheme } from "next-themes";
+  BellIcon,
+  MagnifyingGlassIcon,
+  UserCircleIcon,
+} from "@heroicons/react/20/solid";
 
 export const Header: FC = () => {
-  const { theme, setTheme } = useTheme();
-
   return (
-    <header className="w-full border-b bg-background/70 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-16 items-center gap-4 px-6">
-        <div className="flex-1 flex items-center gap-4">
-          <div className="w-72 max-w-full">
-            <Input
-              classNames={{
-                base: "max-w-full h-10",
-                mainWrapper: "h-10",
-                input: "text-small",
-                inputWrapper: "h-10 bg-default-100",
-              }}
-              placeholder="Search anything..."
-              size="sm"
-              startContent={<Search size={18} className="text-default-400" />}
-              type="search"
-              variant="bordered"
-            />
+    <header className="border-b bg-white">
+      <div className="flex h-16 items-center px-8 gap-8">
+        <div className="flex-1 flex items-center">
+          <div className="w-full max-w-lg">
+            <div className="relative">
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="search"
+                placeholder="Search..."
+                className="w-full bg-gray-50 pl-10 pr-4 py-2 text-sm rounded-lg border-0 focus:ring-2 focus:ring-blue-500 transition-all"
+              />
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Tooltip content={theme === "light" ? "Dark mode" : "Light mode"}>
-            <Button
-              isIconOnly
-              variant="light"
-              size="sm"
-              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            >
-              {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-            </Button>
-          </Tooltip>
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+          >
+            <BellIcon className="h-5 w-5" />
+            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-medium text-white flex items-center justify-center">
+              3
+            </span>
+          </Button>
 
-          <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <Button
-                isIconOnly
-                variant="light"
-                size="sm"
-                radius="full"
-              >
-                <Badge
-                  content="3"
-                  size="sm"
-                  color="danger"
-                  shape="circle"
-                  placement="top-right"
-                >
-                  <Bell size={20} />
-                </Badge>
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Notifications" className="w-80">
-              <DropdownItem
-                key="new_project"
-                description="A new project has been created"
-                startContent={
-                  <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                    <Bell size={16} />
-                  </div>
-                }
-              >
-                <span className="font-semibold">New Project Added</span>
-                <p className="text-xs text-default-500 mt-1">2 minutes ago</p>
-              </DropdownItem>
-              <DropdownItem
-                key="feedback"
-                description="John Doe submitted feedback"
-                startContent={
-                  <div className="w-8 h-8 rounded-full bg-success/10 text-success flex items-center justify-center">
-                    <MessageSquare size={16} />
-                  </div>
-                }
-              >
-                <span className="font-semibold">New Feedback</span>
-                <p className="text-xs text-default-500 mt-1">1 hour ago</p>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-
-          <Tooltip content="Help">
-            <Button
-              isIconOnly
-              variant="light"
-              size="sm"
-              radius="full"
-            >
-              <HelpCircle size={20} />
-            </Button>
-          </Tooltip>
-
-          <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <Avatar
-                as="button"
-                className="transition-transform"
-                color="primary"
-                name="John Doe"
-                size="sm"
-                src="https://i.pravatar.cc/150?img=3"
-              />
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-semibold">John Doe</p>
-                <p className="text-sm text-default-500">john.doe@example.com</p>
-              </DropdownItem>
-              <DropdownItem
-                key="settings"
-                startContent={<Settings size={16} />}
-              >
-                Settings
-              </DropdownItem>
-              <DropdownItem
-                key="help_and_feedback"
-                startContent={<HelpCircle size={16} />}
-              >
-                Help & Feedback
-              </DropdownItem>
-              <DropdownItem
-                key="logout"
-                className="text-danger"
-                color="danger"
-                startContent={<LogOut size={16} />}
-              >
-                Log Out
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-2"
+          >
+            <UserCircleIcon className="h-5 w-5" />
+            <span className="text-sm font-medium">John Doe</span>
+          </Button>
         </div>
       </div>
     </header>

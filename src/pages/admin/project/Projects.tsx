@@ -1,6 +1,3 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/layout/AppSidebar";
-import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,13 +18,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Calendar, Users, ArrowRight } from "lucide-react";
+import { Plus, Edit, Trash2, Users, PlusCircle, MinusCircle } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
-interface TeamMember {
+interface Member {
   id: number;
   name: string;
+  email: string;
   role: string;
 }
 
@@ -38,183 +36,280 @@ interface Project {
   startDate: string;
   endDate: string;
   status: "active" | "completed" | "upcoming";
-  teamMembers: TeamMember[];
+  members: Member[];
 }
 
 const Projects = () => {
   const { toast } = useToast();
-  const [projects, setProjects] = useState<Project[]>([
-    {
-      id: 1,
-      name: "Employee Satisfaction 2024",
-      description: "Annual feedback collection for employee satisfaction and engagement",
-      startDate: "2024-02-01",
-      endDate: "2024-02-28",
-      status: "active",
-      teamMembers: [
-        { id: 1, name: "John Doe", role: "Team Lead" },
-        { id: 2, name: "Jane Smith", role: "HR Manager" },
-      ],
-    },
-  ]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
+  const [newProject, setNewProject] = useState<Partial<Project>>({
+    name: "",
+    description: "",
+    startDate: "",
+    endDate: "",
+    status: "upcoming",
+    members: [],
+  });
 
-  const handleCreateProject = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const newProject = {
+  const handleAddMember = () => {
+    setNewProject({
+      ...newProject,
+      members: [
+        ...(newProject.members || []),
+        { id: Date.now(), name: "", email: "", role: "member" },
+      ],
+    });
+  };
+
+  const handleRemoveMember = (index: number) => {
+    setNewProject({
+      ...newProject,
+      members: (newProject.members || []).filter((_, i) => i !== index),
+    });
+  };
+
+  const handleMemberChange = (
+    index: number,
+    field: keyof Member,
+    value: string
+  ) => {
+    setNewProject({
+      ...newProject,
+      members: (newProject.members || []).map((member, i) =>
+        i === index ? { ...member, [field]: value } : member
+      ),
+    });
+  };
+
+  const handleCreateProject = () => {
+    const project: Project = {
       id: projects.length + 1,
-      name: formData.get("name") as string,
-      description: formData.get("description") as string,
-      startDate: formData.get("startDate") as string,
-      endDate: formData.get("endDate") as string,
-      status: "upcoming" as const,
-      teamMembers: [],
+      name: newProject.name || "",
+      description: newProject.description || "",
+      startDate: newProject.startDate || "",
+      endDate: newProject.endDate || "",
+      status: newProject.status as "active" | "completed" | "upcoming",
+      members: newProject.members || [],
     };
-    
-    setProjects([...projects, newProject]);
+
+    setProjects([...projects, project]);
+    setIsNewProjectDialogOpen(false);
+    setNewProject({
+      name: "",
+      description: "",
+      startDate: "",
+      endDate: "",
+      status: "upcoming",
+      members: [],
+    });
+
     toast({
-      title: "Project created",
-      description: "Your project has been created successfully.",
+      title: "Project Created",
+      description: "New project has been successfully created.",
     });
   };
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-ata-gray">
-        <AppSidebar />
-        <div className="flex-1">
-          <Header />
-          <main className="p-6">
-            <div className="flex justify-between items-center mb-8">
-              <div>
-                <h1 className="text-2xl font-semibold text-ata-blue">Projects</h1>
-                <p className="text-ata-text mt-2">Manage your feedback projects</p>
-              </div>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
-                    New Project
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[600px]">
-                  <form onSubmit={handleCreateProject}>
-                    <DialogHeader>
-                      <DialogTitle>Create New Project</DialogTitle>
-                      <DialogDescription>
-                        Create a new feedback project and assign team members.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="space-y-2">
-                        <label htmlFor="name" className="text-sm font-medium">
-                          Project Name
-                        </label>
-                        <Input
-                          id="name"
-                          name="name"
-                          placeholder="Enter project name"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="description" className="text-sm font-medium">
-                          Description
-                        </label>
-                        <Textarea
-                          id="description"
-                          name="description"
-                          placeholder="Enter project description"
-                          required
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label htmlFor="startDate" className="text-sm font-medium">
-                            Start Date
-                          </label>
-                          <Input
-                            id="startDate"
-                            name="startDate"
-                            type="date"
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label htmlFor="endDate" className="text-sm font-medium">
-                            End Date
-                          </label>
-                          <Input
-                            id="endDate"
-                            name="endDate"
-                            type="date"
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="team" className="text-sm font-medium">
-                          Team Members
-                        </label>
-                        <Select name="team">
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select team members" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="john">John Doe</SelectItem>
-                            <SelectItem value="jane">Jane Smith</SelectItem>
-                            <SelectItem value="bob">Bob Johnson</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <Button type="submit">Create Project</Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
+    <div className="min-h-screen flex w-full bg-ata-gray">
+      <div className="flex-1">
+        <main className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h1 className="text-2xl font-semibold text-ata-blue">Projects</h1>
+              <p className="text-ata-text mt-2">Manage your feedback projects</p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {projects.map((project) => (
-                <Card key={project.id} className="p-6 hover:shadow-lg transition-shadow">
-                  <div className="space-y-4">
+            <Dialog open={isNewProjectDialogOpen} onOpenChange={setIsNewProjectDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  New Project
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Create New Project</DialogTitle>
+                  <DialogDescription>
+                    Add a new project for feedback collection
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Project Name</label>
+                    <Input
+                      value={newProject.name}
+                      onChange={(e) =>
+                        setNewProject({ ...newProject, name: e.target.value })
+                      }
+                      placeholder="Enter project name"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Description</label>
+                    <Textarea
+                      value={newProject.description}
+                      onChange={(e) =>
+                        setNewProject({ ...newProject, description: e.target.value })
+                      }
+                      placeholder="Enter project description"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <h3 className="font-semibold text-lg text-ata-blue mb-2">{project.name}</h3>
-                      <p className="text-sm text-ata-text line-clamp-2">{project.description}</p>
+                      <label className="text-sm font-medium">Start Date</label>
+                      <Input
+                        type="date"
+                        value={newProject.startDate}
+                        onChange={(e) =>
+                          setNewProject({ ...newProject, startDate: e.target.value })
+                        }
+                      />
                     </div>
-                    
-                    <div className="flex items-center gap-2 text-sm text-ata-text">
-                      <Calendar className="h-4 w-4" />
-                      <span>{new Date(project.startDate).toLocaleDateString()} - {new Date(project.endDate).toLocaleDateString()}</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-ata-text" />
-                      <span className="text-sm text-ata-text">{project.teamMembers.length} members</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium
-                        ${project.status === 'active' ? 'bg-green-100 text-green-800' : 
-                          project.status === 'completed' ? 'bg-gray-100 text-gray-800' :
-                          'bg-blue-100 text-blue-800'}`}>
-                        {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
-                      </span>
-                      <Button variant="ghost" size="sm" className="flex items-center gap-1">
-                        View Details
-                        <ArrowRight className="h-4 w-4" />
-                      </Button>
+                    <div>
+                      <label className="text-sm font-medium">End Date</label>
+                      <Input
+                        type="date"
+                        value={newProject.endDate}
+                        onChange={(e) =>
+                          setNewProject({ ...newProject, endDate: e.target.value })
+                        }
+                      />
                     </div>
                   </div>
-                </Card>
-              ))}
-            </div>
-          </main>
-        </div>
+                  <div>
+                    <label className="text-sm font-medium">Status</label>
+                    <Select
+                      value={newProject.status}
+                      onValueChange={(value: any) =>
+                        setNewProject({ ...newProject, status: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="upcoming">Upcoming</SelectItem>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="completed">Completed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <label className="text-sm font-medium">Team Members</label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleAddMember}
+                        className="flex items-center gap-2"
+                      >
+                        <PlusCircle className="h-4 w-4" />
+                        Add Member
+                      </Button>
+                    </div>
+                    {newProject.members?.map((member, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex items-center gap-4">
+                          <Input
+                            value={member.name}
+                            onChange={(e) =>
+                              handleMemberChange(index, "name", e.target.value)
+                            }
+                            placeholder="Member name"
+                          />
+                          <Input
+                            value={member.email}
+                            onChange={(e) =>
+                              handleMemberChange(index, "email", e.target.value)
+                            }
+                            placeholder="Email"
+                          />
+                          <Select
+                            value={member.role}
+                            onValueChange={(value) =>
+                              handleMemberChange(index, "role", value)
+                            }
+                          >
+                            <SelectTrigger className="w-[120px]">
+                              <SelectValue placeholder="Role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="admin">Admin</SelectItem>
+                              <SelectItem value="member">Member</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveMember(index)}
+                          >
+                            <MinusCircle className="h-4 w-4 text-red-500" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsNewProjectDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleCreateProject}>Create Project</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((project) => (
+              <Card key={project.id} className="p-6 space-y-4">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-semibold">{project.name}</h3>
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        project.status === "active"
+                          ? "bg-green-100 text-green-800"
+                          : project.status === "completed"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {project.description}
+                  </p>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm">
+                    <Users className="mr-2 h-4 w-4" />
+                    <span>{project.members.length} Members</span>
+                  </div>
+                  <div className="text-sm">
+                    {new Date(project.startDate).toLocaleDateString()} -{" "}
+                    {new Date(project.endDate).toLocaleDateString()}
+                  </div>
+                </div>
+
+                <div className="pt-4 flex justify-end gap-2">
+                  <Button variant="ghost" size="sm">
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </main>
       </div>
-    </SidebarProvider>
+    </div>
   );
 };
 
