@@ -1,138 +1,310 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/layout/AppSidebar";
-import { Header } from "@/components/layout/Header";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Calendar, ArrowRight, CheckCircle, Clock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Button,
+  Tabs,
+  Tab,
+  Progress,
+  Radio,
+  RadioGroup,
+  Textarea,
+  Select,
+  SelectItem,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react";
+import { SidebarProvider } from "../../components/providers/SidebarProvider";
+import AppSidebar from "../../components/layout/AppSidebar";
+import Header from "../../components/layout/Header";
 
-interface FeedbackItem {
+interface FeedbackQuestion {
+  id: number;
+  text: string;
+  content: string;
+  required: boolean;
+  type: string;
+  category: string;
+  answerType: string;
+  answers?: { text: string; value: string }[];
+}
+
+interface Feedback {
   id: number;
   name: string;
   description: string;
-  dueDate: string;
+  startDate: string;
+  endDate: string;
   status: "pending" | "completed";
-  projectName: string;
+  progress: number;
+  questions: FeedbackQuestion[];
 }
 
 const EmployeeFeedback = () => {
-  const navigate = useNavigate();
-  
-  const pendingFeedbacks: FeedbackItem[] = [
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
+  const [privacySettings, setPrivacySettings] = useState({
+    shareIdentity: false,
+    shareDepartment: true,
+    shareResponses: "anonymized",
+  });
+
+  // Sample data
+  const feedbacks: Feedback[] = [
     {
       id: 1,
-      name: "Employee Satisfaction Survey 2024",
-      description: "Share your thoughts about your work experience",
-      dueDate: "2024-02-28",
+      name: "Q1 2025 Employee Satisfaction Survey",
+      description: "Quarterly feedback collection for employee satisfaction and engagement",
+      startDate: "2025-01-01",
+      endDate: "2025-01-31",
       status: "pending",
-      projectName: "Company Culture Initiative",
+      progress: 0,
+      questions: [
+        {
+          id: 1,
+          text: "Work Environment",
+          content: "How satisfied are you with your current work environment?",
+          required: true,
+          type: "RATING",
+          category: "WORK_ENVIRONMENT",
+          answerType: "SATISFACTION_BASE",
+          answers: [
+            { text: "Very Satisfied", value: "5" },
+            { text: "Satisfied", value: "4" },
+            { text: "Neutral", value: "3" },
+            { text: "Dissatisfied", value: "2" },
+            { text: "Very Dissatisfied", value: "1" },
+          ],
+        },
+        // Add more questions as needed
+      ],
+    },
+    {
+      id: 2,
+      name: "Project Alpha Feedback",
+      description: "Feedback for Project Alpha implementation phase",
+      startDate: "2025-02-01",
+      endDate: "2025-02-15",
+      status: "completed",
+      progress: 100,
+      questions: [],
     },
   ];
 
-  const completedFeedbacks: FeedbackItem[] = [
-    {
-      id: 2,
-      name: "Q4 2023 Project Review",
-      description: "Project feedback and improvement suggestions",
-      dueDate: "2023-12-15",
-      status: "completed",
-      projectName: "Digital Transformation",
-    },
-  ];
+  const handleStartFeedback = (feedback: Feedback) => {
+    setSelectedFeedback(feedback);
+    onOpen();
+  };
+
+  const handleSubmitFeedback = () => {
+    // Handle feedback submission
+    onClose();
+  };
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-ata-gray">
+      <div className="min-h-screen flex w-full bg-gray-50">
         <AppSidebar />
         <div className="flex-1">
           <Header />
           <main className="p-6">
-            <div className="mb-8">
-              <h1 className="text-2xl font-semibold text-ata-blue">My Feedback</h1>
-              <p className="text-ata-text mt-2">View and complete your feedback requests</p>
+            <div className="mb-6">
+              <h1 className="text-2xl font-semibold text-gray-800">Employee Feedback</h1>
+              <p className="text-gray-600">View and submit your feedback</p>
             </div>
-            
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-yellow-500" />
-                  Pending Feedback
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {pendingFeedbacks.map((feedback) => (
-                    <Card key={feedback.id} className="p-6">
-                      <div className="space-y-4">
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-lg text-ata-blue">{feedback.name}</h3>
-                            <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
-                              Pending
-                            </span>
-                          </div>
-                          <p className="text-sm text-ata-text">{feedback.description}</p>
-                        </div>
-                        
-                        <div className="text-sm text-ata-text">
-                          <p className="mb-1">Project: {feedback.projectName}</p>
-                          <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4" />
-                            <span>Due: {new Date(feedback.dueDate).toLocaleDateString()}</span>
-                          </div>
-                        </div>
 
-                        <Button
-                          className="w-full flex items-center justify-center gap-2"
-                          onClick={() => navigate(`/employee/feedback/${feedback.id}`)}
-                        >
-                          Start Feedback
-                          <ArrowRight className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </Card>
-                  ))}
+            <Tabs 
+              aria-label="Feedback tabs" 
+              color="primary"
+              className="mb-6"
+            >
+              <Tab key="pending" title="Pending Feedback">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {feedbacks
+                    .filter((f) => f.status === "pending")
+                    .map((feedback) => (
+                      <Card key={feedback.id} className="w-full">
+                        <CardHeader className="flex gap-3">
+                          <div className="flex flex-col">
+                            <p className="text-md font-semibold">{feedback.name}</p>
+                            <p className="text-small text-default-500">
+                              Due: {new Date(feedback.endDate).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </CardHeader>
+                        <CardBody>
+                          <p className="text-small text-default-600">
+                            {feedback.description}
+                          </p>
+                          <div className="mt-4">
+                            <Progress
+                              value={feedback.progress}
+                              color="primary"
+                              className="h-2"
+                              showValueLabel
+                            />
+                          </div>
+                        </CardBody>
+                        <CardFooter>
+                          <Button 
+                            color="primary" 
+                            onPress={() => handleStartFeedback(feedback)}
+                          >
+                            Start Feedback
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    ))}
                 </div>
-              </div>
-              
-              <div>
-                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  Completed Feedback
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {completedFeedbacks.map((feedback) => (
-                    <Card key={feedback.id} className="p-6 opacity-75">
-                      <div className="space-y-4">
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-lg text-ata-blue">{feedback.name}</h3>
-                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
-                              Completed
-                            </span>
+              </Tab>
+              <Tab key="completed" title="Completed Feedback">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {feedbacks
+                    .filter((f) => f.status === "completed")
+                    .map((feedback) => (
+                      <Card key={feedback.id} className="w-full">
+                        <CardHeader className="flex gap-3">
+                          <div className="flex flex-col">
+                            <p className="text-md font-semibold">{feedback.name}</p>
+                            <p className="text-small text-default-500">
+                              Completed: {new Date(feedback.endDate).toLocaleDateString()}
+                            </p>
                           </div>
-                          <p className="text-sm text-ata-text">{feedback.description}</p>
-                        </div>
-                        
-                        <div className="text-sm text-ata-text">
-                          <p className="mb-1">Project: {feedback.projectName}</p>
-                          <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4" />
-                            <span>Completed: {new Date(feedback.dueDate).toLocaleDateString()}</span>
+                        </CardHeader>
+                        <CardBody>
+                          <p className="text-small text-default-600">
+                            {feedback.description}
+                          </p>
+                          <div className="mt-4">
+                            <Progress
+                              value={100}
+                              color="success"
+                              className="h-2"
+                              showValueLabel
+                            />
                           </div>
-                        </div>
+                        </CardBody>
+                        <CardFooter>
+                          <Button 
+                            color="primary" 
+                            variant="bordered"
+                            onPress={() => handleStartFeedback(feedback)}
+                          >
+                            View Feedback
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    ))}
+                </div>
+              </Tab>
+            </Tabs>
 
-                        <Button
-                          variant="outline"
-                          className="w-full"
-                          onClick={() => navigate(`/employee/feedback/${feedback.id}`)}
-                        >
-                          View Feedback
-                        </Button>
-                      </div>
-                    </Card>
-                  ))}
+            {/* Privacy Settings Card */}
+            <Card className="mt-6">
+              <CardHeader>
+                <h3 className="text-xl font-semibold">Privacy Settings</h3>
+              </CardHeader>
+              <CardBody className="space-y-6">
+                <div>
+                  <RadioGroup
+                    label="Share Identity"
+                    value={privacySettings.shareIdentity.toString()}
+                    onChange={(value) =>
+                      setPrivacySettings({
+                        ...privacySettings,
+                        shareIdentity: value === "true",
+                      })
+                    }
+                  >
+                    <Radio value="true">Share my identity</Radio>
+                    <Radio value="false">Keep anonymous</Radio>
+                  </RadioGroup>
                 </div>
-              </div>
-            </div>
+
+                <div>
+                  <RadioGroup
+                    label="Share Department Information"
+                    value={privacySettings.shareDepartment.toString()}
+                    onChange={(value) =>
+                      setPrivacySettings({
+                        ...privacySettings,
+                        shareDepartment: value === "true",
+                      })
+                    }
+                  >
+                    <Radio value="true">Share department info</Radio>
+                    <Radio value="false">Keep department private</Radio>
+                  </RadioGroup>
+                </div>
+
+                <div>
+                  <Select
+                    label="Response Visibility"
+                    value={privacySettings.shareResponses}
+                    onChange={(e) =>
+                      setPrivacySettings({
+                        ...privacySettings,
+                        shareResponses: e.target.value,
+                      })
+                    }
+                  >
+                    <SelectItem value="public">Visible to all</SelectItem>
+                    <SelectItem value="anonymized">Anonymized responses</SelectItem>
+                    <SelectItem value="private">Private (management only)</SelectItem>
+                  </Select>
+                </div>
+              </CardBody>
+            </Card>
+
+            {/* Feedback Modal */}
+            <Modal 
+              isOpen={isOpen} 
+              onClose={onClose}
+              size="3xl"
+              scrollBehavior="inside"
+            >
+              <ModalContent>
+                <ModalHeader>
+                  {selectedFeedback?.name}
+                </ModalHeader>
+                <ModalBody>
+                  {selectedFeedback?.questions.map((question) => (
+                    <div key={question.id} className="mb-6">
+                      <p className="font-medium mb-2">{question.content}</p>
+                      {question.type === "RATING" && (
+                        <RadioGroup orientation="horizontal">
+                          {question.answers?.map((answer) => (
+                            <Radio key={answer.value} value={answer.value}>
+                              {answer.text}
+                            </Radio>
+                          ))}
+                        </RadioGroup>
+                      )}
+                      {question.type === "TEXT" && (
+                        <Textarea
+                          placeholder="Enter your response"
+                          minRows={3}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Cancel
+                  </Button>
+                  <Button color="primary" onPress={handleSubmitFeedback}>
+                    Submit Feedback
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </main>
         </div>
       </div>
