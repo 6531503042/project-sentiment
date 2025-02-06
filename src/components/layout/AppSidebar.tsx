@@ -1,61 +1,100 @@
 import { FC } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import {
   Avatar,
   Button,
   Divider,
   Tooltip,
+  Card,
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import {
-  Home,
-  BarChart2,
-  Users,
+  LayoutDashboard,
   MessageSquare,
-  Settings,
-  LogOut,
+  ThumbsUp,
   ChevronLeft,
   ChevronRight,
+  Settings,
 } from "lucide-react";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface NavItem {
   label: string;
   href: string;
   icon: JSX.Element;
   description: string;
+  children?: NavItem[];
 }
 
-const adminNavItems: NavItem[] = [
-  { 
-    label: "Dashboard", 
-    href: "/admin/projects", 
-    icon: <Home size={22} />,
-    description: "Overview and analytics"
+const navItems: NavItem[] = [
+  {
+    label: "Projects",
+    href: "/manage/dashboard",
+    icon: <LayoutDashboard size={22} />,
+    description: "Project Management",
+    children: [
+      {
+        label: "Overview",
+        href: "/manage/dashboard",
+        icon: <LayoutDashboard size={20} />,
+        description: "Project Overview"
+      },
+      {
+        label: "Analytics",
+        href: "/manage/dashboard/analytics",
+        icon: <LayoutDashboard size={20} />,
+        description: "Project Analytics"
+      }
+    ]
   },
-  { 
-    label: "Projects", 
-    href: "/admin/projects/dashboard", 
-    icon: <BarChart2 size={22} />,
-    description: "Manage projects"
+  {
+    label: "Feedback",
+    href: "/manage/dashboard",
+    icon: <ThumbsUp size={22} />,
+    description: "Feedback Management",
+    children: [
+      {
+        label: "All Feedback",
+        href: "/manage/dashboard/feedback",
+        icon: <ThumbsUp size={20} />,
+        description: "View All Feedback"
+      },
+      {
+        label: "Reports",
+        href: "/manage/dashboard/feedback/reports",
+        icon: <ThumbsUp size={20} />,
+        description: "Feedback Reports"
+      }
+    ]
   },
-  { 
-    label: "Questions", 
-    href: "/admin/questions", 
+  {
+    label: "Questions",
+    href: "/manage/dashboard",
     icon: <MessageSquare size={22} />,
-    description: "Survey questions"
-  },
-  { 
-    label: "Team", 
-    href: "/admin/feedback", 
-    icon: <Users size={22} />,
-    description: "Team management"
+    description: "Question Management",
+    children: [
+      {
+        label: "Question Bank",
+        href: "/manage/dashboard/questions",
+        icon: <MessageSquare size={20} />,
+        description: "Manage Questions"
+      },
+      {
+        label: "Templates",
+        href: "/manage/dashboard/questions/templates",
+        icon: <MessageSquare size={20} />,
+        description: "Question Templates"
+      }
+    ]
   },
 ];
 
 export const AppSidebar: FC = () => {
-  const location = useLocation();
+  const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [activeGroup, setActiveGroup] = useState<string | null>(null);
 
   return (
     <motion.div
@@ -68,7 +107,7 @@ export const AppSidebar: FC = () => {
       <Button
         isIconOnly
         variant="light"
-        className="absolute -right-3 top-6 z-50 bg-background border shadow-md"
+        className="absolute -right-3 top-6 z-50 bg-background border shadow-md hover:bg-primary/10"
         size="sm"
         onClick={() => setIsCollapsed(!isCollapsed)}
       >
@@ -88,74 +127,62 @@ export const AppSidebar: FC = () => {
       <Divider className="my-2" />
 
       {/* Navigation Items */}
-      <div className="flex-1 px-4 py-4 flex flex-col gap-2">
-        {adminNavItems.map((item) => (
-          <Tooltip
-            key={item.href}
-            content={isCollapsed ? item.label : item.description}
-            placement="right"
-            delay={200}
-          >
-            <Link to={item.href} className="w-full">
+      <div className="flex-1 px-3 py-4 flex flex-col gap-2 overflow-y-auto">
+        {navItems.map((item) => (
+          <div key={item.href} className="w-full">
+            <Button
+              variant="light"
+              className={cn(
+                "w-full justify-start gap-2 h-11 px-4 mb-1",
+                activeGroup === item.label && "bg-primary/10 text-primary"
+              )}
+              onClick={() => setActiveGroup(activeGroup === item.label ? null : item.label)}
+            >
+              {item.icon}
+              {!isCollapsed && (
+                <span className="font-medium">{item.label}</span>
+              )}
+            </Button>
+            
+            {!isCollapsed && activeGroup === item.label && item.children && (
               <motion.div
-                whileHover={{ scale: 1.02, translateX: 4 }}
-                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="ml-6 flex flex-col gap-1"
               >
-                <Button
-                  className={`w-full h-12 ${
-                    isCollapsed ? 'justify-center px-2' : 'justify-start px-4'
-                  } ${
-                    location.pathname === item.href
-                      ? 'bg-primary text-white'
-                      : 'bg-transparent hover:bg-default-100'
-                  }`}
-                  variant={location.pathname === item.href ? "solid" : "light"}
-                >
-                  {item.icon}
-                  {!isCollapsed && (
-                    <span className="ml-3">{item.label}</span>
-                  )}
-                </Button>
+                {item.children.map((child) => (
+                  <Link key={child.href} href={child.href}>
+                    <Button
+                      variant="light"
+                      className={cn(
+                        "w-full justify-start gap-2 h-9 px-4",
+                        pathname === child.href && "bg-primary/10 text-primary"
+                      )}
+                    >
+                      {child.icon}
+                      <span className="font-medium">{child.label}</span>
+                    </Button>
+                  </Link>
+                ))}
               </motion.div>
-            </Link>
-          </Tooltip>
+            )}
+          </div>
         ))}
       </div>
 
+      {/* Settings Section */}
       <Divider className="my-2" />
-
-      {/* User Section */}
       <div className="p-4">
-        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} gap-3`}>
-          {!isCollapsed && (
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold">John Doe</span>
-              <span className="text-xs text-default-500">Administrator</span>
-            </div>
-          )}
-          <Avatar
-            size="sm"
-            src="https://i.pravatar.cc/150?img=3"
-            className="cursor-pointer transition-transform hover:scale-105"
-          />
-        </div>
-        
-        <motion.div
-          initial={false}
-          animate={{ height: isCollapsed ? 0 : 'auto', opacity: isCollapsed ? 0 : 1 }}
-          className="mt-4"
+        <Button
+          variant="light"
+          className="w-full justify-start gap-2 h-11"
+          href="/settings"
+          as={Link}
         >
-          {!isCollapsed && (
-            <Button
-              className="w-full justify-start text-danger"
-              color="danger"
-              variant="light"
-              startContent={<LogOut size={18} />}
-            >
-              Log Out
-            </Button>
-          )}
-        </motion.div>
+          <Settings size={22} />
+          {!isCollapsed && <span className="font-medium">Settings</span>}
+        </Button>
       </div>
     </motion.div>
   );
