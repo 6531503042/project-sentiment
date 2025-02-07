@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -20,20 +19,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  PlusCircleIcon,
   DocumentTextIcon,
   ClipboardDocumentCheckIcon,
   ChatBubbleBottomCenterTextIcon,
-  PlusIcon,
+  PlusCircleIcon,
+  XMarkIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-
-// Import specific emotion icons
-import { FaceSmileIcon as HappyIcon } from "@heroicons/react/24/solid";
-import { FaceFrownIcon as SadIcon } from "@heroicons/react/24/solid";
-import { NoSymbolIcon as NeutralIcon } from "@heroicons/react/24/solid";
-
-import { cn } from "@/lib/utils";
+import { FaceSmileIcon, FaceFrownIcon } from "@heroicons/react/24/solid";
 
 const questionTypes = [
   {
@@ -41,49 +34,34 @@ const questionTypes = [
     name: "Text Response",
     description: "Allow users to provide detailed written feedback",
     icon: DocumentTextIcon,
-    color: "text-blue-500",
-    bgColor: "bg-blue-50",
+    gradient: "from-blue-50 to-sky-50",
+    iconColor: "text-blue-600",
   },
   {
     id: "multiple_choice",
     name: "Multiple Choice",
-    description: "Present users with predefined options",
+    description: "Let users choose from predefined options",
     icon: ClipboardDocumentCheckIcon,
-    color: "text-purple-500",
-    bgColor: "bg-purple-50",
+    gradient: "from-purple-50 to-violet-50",
+    iconColor: "text-purple-600",
   },
   {
     id: "sentiment",
     name: "Sentiment Analysis",
-    description: "Gather emotional responses and feelings",
+    description: "Gather emotional responses and feedback",
     icon: ChatBubbleBottomCenterTextIcon,
-    color: "text-rose-500",
-    bgColor: "bg-rose-50",
+    gradient: "from-rose-50 to-pink-50",
+    iconColor: "text-rose-600",
   },
 ];
 
-const sentimentOptions = [
-  {
-    id: "positive",
-    name: "Positive",
-    icon: HappyIcon,
-    color: "text-green-500",
-    bgColor: "bg-green-50",
-  },
-  {
-    id: "neutral",
-    name: "Neutral",
-    icon: NeutralIcon,
-    color: "text-yellow-500",
-    bgColor: "bg-yellow-50",
-  },
-  {
-    id: "negative",
-    name: "Negative",
-    icon: SadIcon,
-    color: "text-red-500",
-    bgColor: "bg-red-50",
-  },
+const categories = [
+  "Product",
+  "Service",
+  "User Experience",
+  "Customer Support",
+  "Performance",
+  "Other",
 ];
 
 interface CreateQuestionDialogProps {
@@ -91,34 +69,25 @@ interface CreateQuestionDialogProps {
   questionsCount: number;
 }
 
-export const CreateQuestionDialog = ({ onQuestionCreate, questionsCount }: CreateQuestionDialogProps) => {
-  const [questionType, setQuestionType] = React.useState("");
-  const [selectedSentiments, setSelectedSentiments] = React.useState<string[]>([]);
-  const [options, setOptions] = React.useState<string[]>(["", "", ""]);
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [category, setCategory] = React.useState("");
-
-  const toggleSentiment = (sentimentId: string) => {
-    setSelectedSentiments((prev) =>
-      prev.includes(sentimentId)
-        ? prev.filter((id) => id !== sentimentId)
-        : [...prev, sentimentId]
-    );
-  };
-
-  const handleOptionChange = (index: number, value: string) => {
-    const newOptions = [...options];
-    newOptions[index] = value;
-    setOptions(newOptions);
-  };
+export function CreateQuestionDialog({ onQuestionCreate, questionsCount }: CreateQuestionDialogProps) {
+  const [open, setOpen] = useState(false);
+  const [questionType, setQuestionType] = useState("");
+  const [options, setOptions] = useState([""]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
 
   const addOption = () => {
     setOptions([...options, ""]);
   };
 
   const removeOption = (index: number) => {
-    const newOptions = options.filter((_, i) => i !== index);
+    setOptions(options.filter((_, i) => i !== index));
+  };
+
+  const updateOption = (index: number, value: string) => {
+    const newOptions = [...options];
+    newOptions[index] = value;
     setOptions(newOptions);
   };
 
@@ -130,53 +99,57 @@ export const CreateQuestionDialog = ({ onQuestionCreate, questionsCount }: Creat
       description,
       category,
       options,
-      sentiments: selectedSentiments,
     };
 
     onQuestionCreate(newQuestion);
+    setOpen(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="gap-2">
-          <PlusCircleIcon className="h-5 w-5" />
-          Create Question
+          <PlusCircleIcon className="h-4 w-4" />
+          New Question
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create New Question</DialogTitle>
+          <DialogTitle className="text-2xl">Create New Question</DialogTitle>
           <DialogDescription>
-            Design your question to gather meaningful feedback
+            Design a question to gather meaningful feedback from your users.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-6 py-4">
+        <div className="space-y-8 py-4">
           {/* Question Type Selection */}
-          <div className="grid grid-cols-3 gap-4">
-            {questionTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => setQuestionType(type.id)}
-                className={cn(
-                  "relative flex flex-col items-center p-4 rounded-xl border-2 transition-all duration-200 hover:border-primary/50",
-                  questionType === type.id
-                    ? "border-primary bg-primary/5"
-                    : "border-gray-200"
-                )}
-              >
-                <type.icon
-                  className={cn(
-                    "h-8 w-8 mb-2",
-                    questionType === type.id ? "text-primary" : type.color
-                  )}
-                />
-                <h4 className="text-sm font-medium">{type.name}</h4>
-                <p className="text-xs text-gray-500 text-center mt-1">
-                  {type.description}
-                </p>
-              </button>
-            ))}
+          <div className="space-y-4">
+            <Label className="text-sm font-medium">Question Type</Label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {questionTypes.map((type) => (
+                <button
+                  key={type.id}
+                  onClick={() => setQuestionType(type.id)}
+                  className={`relative p-4 rounded-xl border-2 transition-all ${
+                    questionType === type.id
+                      ? "border-primary ring-2 ring-primary/20"
+                      : "border-transparent hover:border-gray-200"
+                  }`}
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-r ${type.gradient} rounded-xl opacity-50`} />
+                  <div className="relative space-y-3">
+                    <div className={`h-10 w-10 rounded-lg bg-white/80 backdrop-blur flex items-center justify-center ${type.iconColor}`}>
+                      <type.icon className="h-6 w-6" />
+                    </div>
+                    <div className="space-y-1 text-left">
+                      <h3 className="font-medium">{type.name}</h3>
+                      <p className="text-sm text-gray-500 line-clamp-2">
+                        {type.description}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Question Details */}
@@ -188,6 +161,7 @@ export const CreateQuestionDialog = ({ onQuestionCreate, questionsCount }: Creat
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g., How satisfied are you with our service?"
+                className="w-full"
               />
             </div>
 
@@ -198,76 +172,9 @@ export const CreateQuestionDialog = ({ onQuestionCreate, questionsCount }: Creat
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Add additional context or instructions for the question"
-                className="h-20"
+                className="w-full"
               />
             </div>
-
-            {questionType === "sentiment" && (
-              <div className="space-y-2">
-                <Label>Sentiment Options</Label>
-                <div className="grid grid-cols-3 gap-3">
-                  {sentimentOptions.map((sentiment) => (
-                    <button
-                      key={sentiment.id}
-                      onClick={() => toggleSentiment(sentiment.id)}
-                      className={cn(
-                        "flex items-center justify-center gap-2 p-3 rounded-lg transition-all duration-200",
-                        selectedSentiments.includes(sentiment.id)
-                          ? cn("ring-2 ring-primary", sentiment.bgColor)
-                          : "bg-gray-50 hover:bg-gray-100"
-                      )}
-                    >
-                      <sentiment.icon
-                        className={cn("h-6 w-6", sentiment.color)}
-                      />
-                      <span className="text-sm font-medium">{sentiment.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {questionType === "multiple_choice" && (
-              <div className="space-y-2">
-                <Label>Answer Options</Label>
-                <div className="space-y-2">
-                  {options.map((option, index) => (
-                    <div key={index} className="flex gap-2">
-                      <div className="w-8 h-10 flex items-center justify-center text-gray-500 bg-gray-50 rounded-lg">
-                        {String.fromCharCode(65 + index)}
-                      </div>
-                      <Input
-                        value={option}
-                        onChange={(e) => handleOptionChange(index, e.target.value)}
-                        placeholder={`Option ${index + 1}`}
-                        className="flex-1"
-                      />
-                      {index > 1 && (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeOption(index)}
-                          className="text-gray-400 hover:text-red-500"
-                        >
-                          <TrashIcon className="h-5 w-5" />
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={addOption}
-                    className="mt-2 w-full"
-                  >
-                    <PlusIcon className="h-4 w-4 mr-2" />
-                    Add Option
-                  </Button>
-                </div>
-              </div>
-            )}
 
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
@@ -276,21 +183,96 @@ export const CreateQuestionDialog = ({ onQuestionCreate, questionsCount }: Creat
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="general">General Feedback</SelectItem>
-                  <SelectItem value="product">Product Experience</SelectItem>
-                  <SelectItem value="service">Customer Service</SelectItem>
-                  <SelectItem value="usability">Usability</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category.toLowerCase()}>
+                      {category}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
           </div>
+
+          {/* Multiple Choice Options */}
+          {questionType === "multiple_choice" && (
+            <div className="space-y-4">
+              <Label>Answer Options</Label>
+              <div className="space-y-3">
+                {options.map((option, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-lg bg-gray-100 flex items-center justify-center text-sm font-medium text-gray-600">
+                      {String.fromCharCode(65 + index)}
+                    </div>
+                    <Input
+                      value={option}
+                      onChange={(e) => updateOption(index, e.target.value)}
+                      placeholder={`Option ${index + 1}`}
+                      className="flex-1"
+                    />
+                    {options.length > 1 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeOption(index)}
+                        className="text-gray-400 hover:text-red-600"
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                {options.length < 6 && (
+                  <Button
+                    variant="outline"
+                    className="w-full gap-2"
+                    onClick={addOption}
+                  >
+                    <PlusCircleIcon className="h-4 w-4" />
+                    Add Option
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Sentiment Options */}
+          {questionType === "sentiment" && (
+            <div className="space-y-4">
+              <Label>Sentiment Scale</Label>
+              <div className="grid grid-cols-3 gap-4">
+                <button className="p-4 rounded-xl border-2 border-transparent hover:border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50 space-y-2">
+                  <div className="h-10 w-10 rounded-lg bg-white/80 backdrop-blur flex items-center justify-center text-green-600">
+                    <FaceSmileIcon className="h-6 w-6" />
+                  </div>
+                  <div className="text-sm font-medium">Positive</div>
+                </button>
+                <button className="p-4 rounded-xl border-2 border-transparent hover:border-gray-200 bg-gradient-to-r from-gray-50 to-slate-50 space-y-2">
+                  <div className="h-10 w-10 rounded-lg bg-white/80 backdrop-blur flex items-center justify-center text-gray-600">
+                    <ChatBubbleBottomCenterTextIcon className="h-6 w-6" />
+                  </div>
+                  <div className="text-sm font-medium">Neutral</div>
+                </button>
+                <button className="p-4 rounded-xl border-2 border-transparent hover:border-gray-200 bg-gradient-to-r from-red-50 to-rose-50 space-y-2">
+                  <div className="h-10 w-10 rounded-lg bg-white/80 backdrop-blur flex items-center justify-center text-red-600">
+                    <FaceFrownIcon className="h-6 w-6" />
+                  </div>
+                  <div className="text-sm font-medium">Negative</div>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-        <DialogFooter>
-          <Button type="button" onClick={handleCreateQuestion} className="w-full sm:w-auto">
+
+        <div className="flex justify-end gap-3 pt-4">
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button className="gap-2" onClick={handleCreateQuestion}>
+            <PlusCircleIcon className="h-4 w-4" />
             Create Question
           </Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
-};
+}

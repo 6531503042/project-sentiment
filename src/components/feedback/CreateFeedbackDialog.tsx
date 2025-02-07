@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -20,125 +19,99 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  PlusCircleIcon,
-  ChatBubbleLeftRightIcon,
+  ChatBubbleBottomCenterTextIcon,
+  ClipboardDocumentListIcon,
   StarIcon,
-  ListBulletIcon,
-  DocumentTextIcon,
+  PlusCircleIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
-
-// Import specific emotion icons
-import { FaceSmileIcon as HappyIcon } from "@heroicons/react/24/solid";
-import { FaceFrownIcon as SadIcon } from "@heroicons/react/24/solid";
-import { NoSymbolIcon as NeutralIcon } from "@heroicons/react/24/solid";
-
-import { cn } from "@/lib/utils";
+import { DatePicker } from "@/components/ui/date-picker";
 
 const feedbackTypes = [
   {
-    id: "rating",
-    name: "Rating Scale",
-    description: "Collect numerical ratings from users",
+    id: "satisfaction",
+    name: "Satisfaction Survey",
+    description: "Measure user satisfaction and happiness",
     icon: StarIcon,
-    color: "text-amber-500",
-    bgColor: "bg-amber-50",
+    gradient: "from-amber-50 to-yellow-50",
+    iconColor: "text-amber-600",
   },
   {
-    id: "sentiment",
-    name: "Sentiment",
-    description: "Gather emotional responses",
-    icon: ChatBubbleLeftRightIcon,
-    color: "text-violet-500",
-    bgColor: "bg-violet-50",
+    id: "feature",
+    name: "Feature Feedback",
+    description: "Gather feedback on specific features",
+    icon: ClipboardDocumentListIcon,
+    gradient: "from-blue-50 to-sky-50",
+    iconColor: "text-blue-600",
   },
   {
-    id: "text",
-    name: "Text Response",
-    description: "Collect detailed written feedback",
-    icon: DocumentTextIcon,
-    color: "text-blue-500",
-    bgColor: "bg-blue-50",
+    id: "general",
+    name: "General Feedback",
+    description: "Collect open-ended user feedback",
+    icon: ChatBubbleBottomCenterTextIcon,
+    gradient: "from-purple-50 to-violet-50",
+    iconColor: "text-purple-600",
   },
 ];
 
-const sentimentOptions = [
-  {
-    id: "positive",
-    name: "Positive",
-    icon: HappyIcon,
-    color: "text-green-500",
-    bgColor: "bg-green-50",
-  },
-  {
-    id: "neutral",
-    name: "Neutral",
-    icon: NeutralIcon,
-    color: "text-yellow-500",
-    bgColor: "bg-yellow-50",
-  },
-  {
-    id: "negative",
-    name: "Negative",
-    icon: SadIcon,
-    color: "text-red-500",
-    bgColor: "bg-red-50",
-  },
+const categories = [
+  "Product",
+  "Service",
+  "User Experience",
+  "Customer Support",
+  "Performance",
+  "Other",
 ];
 
-export const CreateFeedbackDialog = () => {
-  const [feedbackType, setFeedbackType] = React.useState("");
-  const [selectedSentiments, setSelectedSentiments] = React.useState<string[]>([]);
-  const [ratingScale, setRatingScale] = React.useState(5);
-
-  const toggleSentiment = (sentimentId: string) => {
-    setSelectedSentiments((prev) =>
-      prev.includes(sentimentId)
-        ? prev.filter((id) => id !== sentimentId)
-        : [...prev, sentimentId]
-    );
-  };
+export function CreateFeedbackDialog() {
+  const [open, setOpen] = useState(false);
+  const [feedbackType, setFeedbackType] = useState("");
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="gap-2">
-          <PlusCircleIcon className="h-5 w-5" />
-          Create Feedback Form
+          <PlusCircleIcon className="h-4 w-4" />
+          New Feedback Form
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create Feedback Form</DialogTitle>
+          <DialogTitle className="text-2xl">Create Feedback Form</DialogTitle>
           <DialogDescription>
-            Design your feedback form to collect valuable insights
+            Design a feedback form to gather valuable user insights.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-6 py-4">
+        <div className="space-y-8 py-4">
           {/* Feedback Type Selection */}
-          <div className="grid grid-cols-3 gap-4">
-            {feedbackTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => setFeedbackType(type.id)}
-                className={cn(
-                  "relative flex flex-col items-center p-4 rounded-xl border-2 transition-all duration-200 hover:border-primary/50",
-                  feedbackType === type.id
-                    ? "border-primary bg-primary/5"
-                    : "border-gray-200"
-                )}
-              >
-                <type.icon
-                  className={cn(
-                    "h-8 w-8 mb-2",
-                    feedbackType === type.id ? "text-primary" : type.color
-                  )}
-                />
-                <h4 className="text-sm font-medium">{type.name}</h4>
-                <p className="text-xs text-gray-500 text-center mt-1">
-                  {type.description}
-                </p>
-              </button>
-            ))}
+          <div className="space-y-4">
+            <Label className="text-sm font-medium">Feedback Type</Label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {feedbackTypes.map((type) => (
+                <button
+                  key={type.id}
+                  onClick={() => setFeedbackType(type.id)}
+                  className={`relative p-4 rounded-xl border-2 transition-all ${
+                    feedbackType === type.id
+                      ? "border-primary ring-2 ring-primary/20"
+                      : "border-transparent hover:border-gray-200"
+                  }`}
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-r ${type.gradient} rounded-xl opacity-50`} />
+                  <div className="relative space-y-3">
+                    <div className={`h-10 w-10 rounded-lg bg-white/80 backdrop-blur flex items-center justify-center ${type.iconColor}`}>
+                      <type.icon className="h-6 w-6" />
+                    </div>
+                    <div className="space-y-1 text-left">
+                      <h3 className="font-medium">{type.name}</h3>
+                      <p className="text-sm text-gray-500 line-clamp-2">
+                        {type.description}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Feedback Form Details */}
@@ -147,7 +120,8 @@ export const CreateFeedbackDialog = () => {
               <Label htmlFor="title">Form Title</Label>
               <Input
                 id="title"
-                placeholder="e.g., Customer Satisfaction Survey"
+                placeholder="e.g., Product Satisfaction Survey"
+                className="w-full"
               />
             </div>
 
@@ -156,85 +130,97 @@ export const CreateFeedbackDialog = () => {
               <Textarea
                 id="description"
                 placeholder="Provide context about this feedback form"
-                className="h-20"
+                className="w-full"
               />
             </div>
 
-            {feedbackType === "sentiment" && (
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Sentiment Options</Label>
-                <div className="grid grid-cols-3 gap-3">
-                  {sentimentOptions.map((sentiment) => (
+                <Label htmlFor="category">Category</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category} value={category.toLowerCase()}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Due Date</Label>
+                <DatePicker />
+              </div>
+            </div>
+
+            {/* Satisfaction Survey Specific */}
+            {feedbackType === "satisfaction" && (
+              <div className="space-y-4">
+                <Label>Rating Scale</Label>
+                <div className="grid grid-cols-5 gap-2">
+                  {[1, 2, 3, 4, 5].map((rating) => (
                     <button
-                      key={sentiment.id}
-                      onClick={() => toggleSentiment(sentiment.id)}
-                      className={cn(
-                        "flex items-center justify-center gap-2 p-3 rounded-lg transition-all duration-200",
-                        selectedSentiments.includes(sentiment.id)
-                          ? cn("ring-2 ring-primary", sentiment.bgColor)
-                          : "bg-gray-50 hover:bg-gray-100"
-                      )}
+                      key={rating}
+                      className="p-4 rounded-xl border-2 border-transparent hover:border-amber-200 bg-gradient-to-b from-amber-50 to-amber-100/50 space-y-2"
                     >
-                      <sentiment.icon
-                        className={cn("h-6 w-6", sentiment.color)}
-                      />
-                      <span className="text-sm font-medium">{sentiment.name}</span>
+                      <div className="h-8 w-8 mx-auto rounded-lg bg-white/80 backdrop-blur flex items-center justify-center text-amber-600">
+                        <StarIcon className="h-5 w-5" />
+                      </div>
+                      <div className="text-sm font-medium text-center">{rating}</div>
                     </button>
                   ))}
                 </div>
+                <p className="text-sm text-gray-500">Users will rate on a scale of 1-5 stars</p>
               </div>
             )}
 
-            {feedbackType === "rating" && (
-              <div className="space-y-2">
-                <Label>Rating Scale</Label>
-                <div className="flex items-center gap-4">
-                  <Select
-                    value={ratingScale.toString()}
-                    onValueChange={(value) => setRatingScale(Number(value))}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select scale" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="5">1-5 Stars</SelectItem>
-                      <SelectItem value="10">1-10 Scale</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="flex items-center gap-1">
-                    {[...Array(ratingScale)].map((_, i) => (
-                      <StarIcon
-                        key={i}
-                        className="h-5 w-5 text-amber-400"
-                      />
-                    ))}
+            {/* Feature Feedback Specific */}
+            {feedbackType === "feature" && (
+              <div className="space-y-4">
+                <Label>Feature Selection</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-4 rounded-xl border-2 border-transparent hover:border-blue-200 bg-gradient-to-b from-blue-50 to-blue-100/50">
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-lg bg-white/80 backdrop-blur flex items-center justify-center text-blue-600">
+                        <ClipboardDocumentListIcon className="h-5 w-5" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-sm font-medium">Specific Feature</div>
+                        <p className="text-xs text-gray-500">Focus on one feature</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4 rounded-xl border-2 border-transparent hover:border-blue-200 bg-gradient-to-b from-blue-50 to-blue-100/50">
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-lg bg-white/80 backdrop-blur flex items-center justify-center text-blue-600">
+                        <ChatBubbleBottomCenterTextIcon className="h-5 w-5" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-sm font-medium">Multiple Features</div>
+                        <p className="text-xs text-gray-500">Gather broader feedback</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
-
-            <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="product">Product Feedback</SelectItem>
-                  <SelectItem value="service">Customer Service</SelectItem>
-                  <SelectItem value="usability">Usability</SelectItem>
-                  <SelectItem value="general">General</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
           </div>
         </div>
-        <DialogFooter>
-          <Button type="submit" className="w-full sm:w-auto">
+
+        <div className="flex justify-end gap-3 pt-4">
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button className="gap-2" onClick={() => setOpen(false)}>
+            <PlusCircleIcon className="h-4 w-4" />
             Create Form
           </Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
-};
+}

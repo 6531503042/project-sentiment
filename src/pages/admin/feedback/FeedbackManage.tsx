@@ -37,6 +37,7 @@ import { CreateFeedbackDialog } from "@/components/feedback/CreateFeedbackDialog
 import { FaceSmileIcon as HappyIcon } from "@heroicons/react/24/solid";
 import { FaceFrownIcon as SadIcon } from "@heroicons/react/24/solid";
 import { NoSymbolIcon as NeutralIcon } from "@heroicons/react/24/solid";
+import TrashIcon from "@heroicons/react/20/solid/TrashIcon";
 
 const sentimentColors = {
   positive: "bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border-green-200",
