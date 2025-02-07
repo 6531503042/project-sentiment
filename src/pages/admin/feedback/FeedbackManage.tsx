@@ -24,7 +24,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { CreateFeedbackDialog } from "@/components/feedback/CreateFeedbackDialog";
-import { Plus, Search, SlidersHorizontal, MoreHorizontal, MessageSquare, Heart, Smile } from "lucide-react";
+import { Plus, Search, SlidersHorizontal, MoreHorizontal, MessageSquare, Heart, Smile, Trash2 } from "lucide-react";
 
 const feedbacks = [
   {
@@ -247,7 +247,7 @@ const FeedbackManage = () => {
                               Edit Form
                             </DropdownMenuItem>
                             <DropdownMenuItem className="flex items-center gap-2 text-red-600">
-                              <Trash className="h-4 w-4" />
+                              <Trash2 className="h-4 w-4" />
                               Delete Form
                             </DropdownMenuItem>
                           </DropdownMenuContent>
