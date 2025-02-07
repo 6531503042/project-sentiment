@@ -21,11 +21,10 @@ import {
 } from "@/components/ui/select";
 import {
   PlusCircleIcon,
+  ChatBubbleLeftRightIcon,
+  StarIcon,
+  ListBulletIcon,
   DocumentTextIcon,
-  ClipboardDocumentCheckIcon,
-  ChatBubbleBottomCenterTextIcon,
-  PlusIcon,
-  TrashIcon,
 } from "@heroicons/react/24/outline";
 
 // Import specific emotion icons
@@ -35,30 +34,30 @@ import { NoSymbolIcon as NeutralIcon } from "@heroicons/react/24/solid";
 
 import { cn } from "@/lib/utils";
 
-const questionTypes = [
+const feedbackTypes = [
   {
-    id: "text",
-    name: "Text Response",
-    description: "Allow users to provide detailed written feedback",
-    icon: DocumentTextIcon,
-    color: "text-blue-500",
-    bgColor: "bg-blue-50",
-  },
-  {
-    id: "multiple_choice",
-    name: "Multiple Choice",
-    description: "Present users with predefined options",
-    icon: ClipboardDocumentCheckIcon,
-    color: "text-purple-500",
-    bgColor: "bg-purple-50",
+    id: "rating",
+    name: "Rating Scale",
+    description: "Collect numerical ratings from users",
+    icon: StarIcon,
+    color: "text-amber-500",
+    bgColor: "bg-amber-50",
   },
   {
     id: "sentiment",
-    name: "Sentiment Analysis",
-    description: "Gather emotional responses and feelings",
-    icon: ChatBubbleBottomCenterTextIcon,
-    color: "text-rose-500",
-    bgColor: "bg-rose-50",
+    name: "Sentiment",
+    description: "Gather emotional responses",
+    icon: ChatBubbleLeftRightIcon,
+    color: "text-violet-500",
+    bgColor: "bg-violet-50",
+  },
+  {
+    id: "text",
+    name: "Text Response",
+    description: "Collect detailed written feedback",
+    icon: DocumentTextIcon,
+    color: "text-blue-500",
+    bgColor: "bg-blue-50",
   },
 ];
 
@@ -86,18 +85,10 @@ const sentimentOptions = [
   },
 ];
 
-interface CreateQuestionDialogProps {
-  onQuestionCreate: (question: any) => void;
-  questionsCount: number;
-}
-
-export const CreateQuestionDialog = ({ onQuestionCreate, questionsCount }: CreateQuestionDialogProps) => {
-  const [questionType, setQuestionType] = React.useState("");
+export const CreateFeedbackDialog = () => {
+  const [feedbackType, setFeedbackType] = React.useState("");
   const [selectedSentiments, setSelectedSentiments] = React.useState<string[]>([]);
-  const [options, setOptions] = React.useState<string[]>(["", "", ""]);
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [category, setCategory] = React.useState("");
+  const [ratingScale, setRatingScale] = React.useState(5);
 
   const toggleSentiment = (sentimentId: string) => {
     setSelectedSentiments((prev) =>
@@ -107,60 +98,31 @@ export const CreateQuestionDialog = ({ onQuestionCreate, questionsCount }: Creat
     );
   };
 
-  const handleOptionChange = (index: number, value: string) => {
-    const newOptions = [...options];
-    newOptions[index] = value;
-    setOptions(newOptions);
-  };
-
-  const addOption = () => {
-    setOptions([...options, ""]);
-  };
-
-  const removeOption = (index: number) => {
-    const newOptions = options.filter((_, i) => i !== index);
-    setOptions(newOptions);
-  };
-
-  const handleCreateQuestion = () => {
-    const newQuestion = {
-      id: questionsCount + 1,
-      type: questionType,
-      title,
-      description,
-      category,
-      options,
-      sentiments: selectedSentiments,
-    };
-
-    onQuestionCreate(newQuestion);
-  };
-
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button className="gap-2">
           <PlusCircleIcon className="h-5 w-5" />
-          Create Question
+          Create Feedback Form
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create New Question</DialogTitle>
+          <DialogTitle>Create Feedback Form</DialogTitle>
           <DialogDescription>
-            Design your question to gather meaningful feedback
+            Design your feedback form to collect valuable insights
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-6 py-4">
-          {/* Question Type Selection */}
+          {/* Feedback Type Selection */}
           <div className="grid grid-cols-3 gap-4">
-            {questionTypes.map((type) => (
+            {feedbackTypes.map((type) => (
               <button
                 key={type.id}
-                onClick={() => setQuestionType(type.id)}
+                onClick={() => setFeedbackType(type.id)}
                 className={cn(
                   "relative flex flex-col items-center p-4 rounded-xl border-2 transition-all duration-200 hover:border-primary/50",
-                  questionType === type.id
+                  feedbackType === type.id
                     ? "border-primary bg-primary/5"
                     : "border-gray-200"
                 )}
@@ -168,7 +130,7 @@ export const CreateQuestionDialog = ({ onQuestionCreate, questionsCount }: Creat
                 <type.icon
                   className={cn(
                     "h-8 w-8 mb-2",
-                    questionType === type.id ? "text-primary" : type.color
+                    feedbackType === type.id ? "text-primary" : type.color
                   )}
                 />
                 <h4 className="text-sm font-medium">{type.name}</h4>
@@ -179,30 +141,26 @@ export const CreateQuestionDialog = ({ onQuestionCreate, questionsCount }: Creat
             ))}
           </div>
 
-          {/* Question Details */}
+          {/* Feedback Form Details */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Question Title</Label>
+              <Label htmlFor="title">Form Title</Label>
               <Input
                 id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g., How satisfied are you with our service?"
+                placeholder="e.g., Customer Satisfaction Survey"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description (Optional)</Label>
+              <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Add additional context or instructions for the question"
+                placeholder="Provide context about this feedback form"
                 className="h-20"
               />
             </div>
 
-            {questionType === "sentiment" && (
+            {feedbackType === "sentiment" && (
               <div className="space-y-2">
                 <Label>Sentiment Options</Label>
                 <div className="grid grid-cols-3 gap-3">
@@ -227,67 +185,53 @@ export const CreateQuestionDialog = ({ onQuestionCreate, questionsCount }: Creat
               </div>
             )}
 
-            {questionType === "multiple_choice" && (
+            {feedbackType === "rating" && (
               <div className="space-y-2">
-                <Label>Answer Options</Label>
-                <div className="space-y-2">
-                  {options.map((option, index) => (
-                    <div key={index} className="flex gap-2">
-                      <div className="w-8 h-10 flex items-center justify-center text-gray-500 bg-gray-50 rounded-lg">
-                        {String.fromCharCode(65 + index)}
-                      </div>
-                      <Input
-                        value={option}
-                        onChange={(e) => handleOptionChange(index, e.target.value)}
-                        placeholder={`Option ${index + 1}`}
-                        className="flex-1"
-                      />
-                      {index > 1 && (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeOption(index)}
-                          className="text-gray-400 hover:text-red-500"
-                        >
-                          <TrashIcon className="h-5 w-5" />
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={addOption}
-                    className="mt-2 w-full"
+                <Label>Rating Scale</Label>
+                <div className="flex items-center gap-4">
+                  <Select
+                    value={ratingScale.toString()}
+                    onValueChange={(value) => setRatingScale(Number(value))}
                   >
-                    <PlusIcon className="h-4 w-4 mr-2" />
-                    Add Option
-                  </Button>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select scale" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="5">1-5 Stars</SelectItem>
+                      <SelectItem value="10">1-10 Scale</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <div className="flex items-center gap-1">
+                    {[...Array(ratingScale)].map((_, i) => (
+                      <StarIcon
+                        key={i}
+                        className="h-5 w-5 text-amber-400"
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
 
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
-              <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+              <Select>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="general">General Feedback</SelectItem>
-                  <SelectItem value="product">Product Experience</SelectItem>
+                  <SelectItem value="product">Product Feedback</SelectItem>
                   <SelectItem value="service">Customer Service</SelectItem>
                   <SelectItem value="usability">Usability</SelectItem>
+                  <SelectItem value="general">General</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
         </div>
         <DialogFooter>
-          <Button type="button" onClick={handleCreateQuestion} className="w-full sm:w-auto">
-            Create Question
+          <Button type="submit" className="w-full sm:w-auto">
+            Create Form
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -21,7 +21,6 @@ import {
 import { Plus, Calendar, MessageSquare, BarChart, ArrowRight, Users } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Header } from "@/components/layout/Header";
 
 interface Project {
   id: number;
@@ -132,7 +131,6 @@ const Feedback = () => {
   return (
     <div className="min-h-screen flex w-full bg-ata-gray">
       <div className="flex-1">
-        <Header />
         <main className="p-6">
           <div className="flex justify-between items-center mb-6">
             <div>
