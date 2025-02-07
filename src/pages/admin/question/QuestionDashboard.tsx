@@ -1,5 +1,4 @@
-import { Header } from "@/components/layout/Header";
-import Sidebar from "@/components/layout/Sidebar";
+import React from 'react';
 import {
   Select,
   SelectContent,
@@ -10,41 +9,13 @@ import {
 import {
   ArrowTrendingUpIcon,
   ArrowDownTrayIcon,
-  FunnelIcon,
   SparklesIcon,
-} from "@heroicons/react/20/solid";
+} from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
-import { MetricCard } from "@/components/dashboard/MetricsCard";
-import { ResponseTrends } from "@/components/dashboard/ResponseTrends";
-import { QuestionTypePerformance } from "@/components/dashboard/QuestionTypePerformance";
-import { SentimentAnalysis } from "@/components/dashboard/SentimentAnalysis";
-import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
 
 const QuestionDashboard = () => {
-  // Sample data - replace with real data
-  const responseData = [
-    { month: "Jan", responses: 245, completion: 92 },
-    { month: "Feb", responses: 356, completion: 94 },
-    { month: "Mar", responses: 478, completion: 96 },
-    { month: "Apr", responses: 512, completion: 95 },
-    { month: "May", responses: 489, completion: 97 },
-  ];
-
-  const questionTypeData = [
-    { type: "Sentiment Analysis", count: 45, engagement: 92 },
-    { type: "Multiple Choice", count: 32, engagement: 88 },
-    { type: "Text Response", count: 23, engagement: 76 },
-  ];
-
-  const sentimentTrends = [
-    { department: "Engineering", positive: 75, neutral: 15, negative: 10 },
-    { department: "Marketing", positive: 82, neutral: 12, negative: 6 },
-    { department: "Sales", positive: 68, neutral: 22, negative: 10 },
-    { department: "HR", positive: 88, neutral: 8, negative: 4 },
-    { department: "Finance", positive: 72, neutral: 18, negative: 10 },
-  ];
-
-  const insightMetrics = [
+  const metrics = [
     {
       title: "Response Quality",
       value: "92%",
@@ -57,7 +28,7 @@ const QuestionDashboard = () => {
       value: "88%",
       trend: "+3%",
       description: "Active participation across departments",
-      icon: <ArrowUpTrendingIcon className="w-6 h-6 text-blue-500" />,
+      icon: <ArrowTrendingUpIcon className="w-6 h-6 text-blue-500" />,
     },
     {
       title: "Sentiment Score",
@@ -69,102 +40,73 @@ const QuestionDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Sidebar />
-      <div className="ml-64 min-h-screen">
-        <Header />
-        <main className="p-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="flex justify-between items-center mb-8">
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                  Question Analytics
-                </h1>
-                <p className="mt-2 text-gray-600">
-                  Comprehensive analysis of feedback questions and responses
-                </p>
-              </div>
-              <div className="flex items-center gap-4">
-                <Select defaultValue="30">
-                  <SelectTrigger className="w-[180px] bg-white">
-                    <SelectValue placeholder="Time Period" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="7">Last 7 days</SelectItem>
-                    <SelectItem value="30">Last 30 days</SelectItem>
-                    <SelectItem value="90">Last 90 days</SelectItem>
-                    <SelectItem value="365">Last year</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button 
-                  variant="outline" 
-                  className="flex items-center gap-2 bg-white hover:bg-gray-50"
-                >
-                  <FunnelIcon className="w-4 h-4" />
-                  Filters
-                </Button>
-                <Button 
-                  className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-300"
-                >
-                  <ArrowDownTrayIcon className="w-4 h-4" />
-                  Export Report
-                </Button>
-              </div>
-            </div>
+    <div className="space-y-8">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold">Question Analytics</h1>
+          <p className="text-gray-500">
+            Comprehensive analysis of feedback questions and responses
+          </p>
+        </div>
+        <div className="flex items-center gap-4">
+          <Select defaultValue="30">
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Time Period" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7">Last 7 days</SelectItem>
+              <SelectItem value="30">Last 30 days</SelectItem>
+              <SelectItem value="90">Last 90 days</SelectItem>
+              <SelectItem value="365">Last year</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="outline" size="icon">
+            <ArrowDownTrayIcon className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
 
-            {/* AI Insights */}
-            <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-100">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500">
-                  <SparklesIcon className="w-6 h-6 text-white" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {metrics.map((metric, index) => (
+          <Card key={index} className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-4">
+                <div className="p-2 rounded-xl bg-gray-50">
+                  {metric.icon}
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">AI-Powered Insights</h2>
-                  <p className="text-sm text-gray-600">Real-time analysis and recommendations</p>
+                  <p className="text-sm font-medium text-gray-600">{metric.title}</p>
+                  <h3 className="text-2xl font-bold">
+                    {metric.value}
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-1">{metric.description}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {insightMetrics.map((metric, index) => (
-                  <MetricCard key={index} {...metric} />
-                ))}
+              <div className={`px-2.5 py-1 rounded-full text-sm font-medium ${
+                metric.trend.startsWith("+") 
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
+              }`}>
+                {metric.trend}
               </div>
             </div>
+          </Card>
+        ))}
+      </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Response Trends */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <ResponseTrends data={responseData} />
-              </motion.div>
-
-              {/* Question Type Performance */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
-                <QuestionTypePerformance data={questionTypeData} />
-              </motion.div>
-
-              {/* Sentiment Analysis */}
-              <motion.div
-                className="lg:col-span-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
-                <SentimentAnalysis data={sentimentTrends} />
-              </motion.div>
-            </div>
-          </motion.div>
-        </main>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold mb-4">Response Trends</h3>
+          <div className="h-80 flex items-center justify-center text-gray-500">
+            Chart will be implemented here
+          </div>
+        </Card>
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold mb-4">Question Type Performance</h3>
+          <div className="h-80 flex items-center justify-center text-gray-500">
+            Chart will be implemented here
+          </div>
+        </Card>
       </div>
     </div>
   );

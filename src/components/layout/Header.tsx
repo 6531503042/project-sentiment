@@ -1,28 +1,27 @@
-import { FC } from "react";
+import React from 'react';
+import { ModeToggle } from "../mode-toggle";
+import { Input } from "@nextui-org/react";
+import { MagnifyingGlassIcon, BellIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
-import {
-  BellIcon,
-  MagnifyingGlassIcon,
-  UserCircleIcon,
-} from "@heroicons/react/20/solid";
 
-export const Header: FC = () => {
+export const Header: React.FC = () => {
   return (
-    <header className="border-b bg-white">
-      <div className="flex h-16 items-center px-8 gap-8">
-        <div className="flex-1 flex items-center">
-          <div className="w-full max-w-lg">
-            <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="search"
-                placeholder="Search..."
-                className="w-full bg-gray-50 pl-10 pr-4 py-2 text-sm rounded-lg border-0 focus:ring-2 focus:ring-blue-500 transition-all"
-              />
-            </div>
-          </div>
+    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-xl">
+      <div className="container flex h-14 items-center justify-between px-4">
+        <div className="flex-1 flex items-center max-w-xl">
+          <Input
+            classNames={{
+              base: "max-w-full h-10",
+              mainWrapper: "h-full",
+              input: "text-small",
+              inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+            }}
+            placeholder="Search..."
+            size="sm"
+            startContent={<MagnifyingGlassIcon className="h-4 w-4 text-default-400" />}
+            type="search"
+          />
         </div>
-
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
@@ -30,19 +29,12 @@ export const Header: FC = () => {
             className="relative"
           >
             <BellIcon className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-medium text-white flex items-center justify-center">
-              3
+            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-medium text-primary-foreground flex items-center justify-center">
+              2
             </span>
           </Button>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            className="gap-2"
-          >
-            <UserCircleIcon className="h-5 w-5" />
-            <span className="text-sm font-medium">John Doe</span>
-          </Button>
+          <div className="h-5 w-px bg-gray-200" />
+          <ModeToggle />
         </div>
       </div>
     </header>

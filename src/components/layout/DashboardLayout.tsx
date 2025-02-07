@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Header } from "./Header";
 import Sidebar from "./Sidebar";
 
-interface DashboardLayoutProps {
-}
+export const DashboardLayout: React.FC = () => {
+  useEffect(() => {
+    console.log('DashboardLayout mounted');
+  }, []);
 
-export const DashboardLayout = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex">
       <Sidebar />
-      <div className="ml-64 min-h-screen flex flex-col">
+      <div className="flex-1 ml-64">
         <Header />
-        <main className="flex-1 p-8">
+        <main className="p-8">
           <Outlet />
         </main>
       </div>

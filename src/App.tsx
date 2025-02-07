@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -20,27 +20,33 @@ import FeedbackForm from "./pages/employee/FeedbackForm";
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
+  useEffect(() => {
+    console.log('App mounted');
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <NextUIProvider>
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
           <BrowserRouter>
-            <Routes>
-              <Route element={<DashboardLayout />}>
-                <Route path="/" element={<Index />} />
-                <Route path="/admin/projects" element={<Projects />} />
-                <Route path="/admin/projects/dashboard" element={<ProjectDashboard />} />
-                <Route path="/admin/questions" element={<Questions />} />
-                <Route path="/admin/questions/dashboard" element={<QuestionDashboard />} />
-                <Route path="/admin/feedback" element={<Feedback />} />
-                <Route path="/admin/feedback/dashboard" element={<FeedbackDashboard />} />
-                <Route path="/employee/feedback" element={<EmployeeFeedback />} />
-                <Route path="/employee/feedback/:id" element={<FeedbackForm />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-            </Routes>
-            <Toaster />
-            <Sonner />
+            <div className="min-h-screen bg-gray-50">
+              <Routes>
+                <Route element={<DashboardLayout />}>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/admin/projects" element={<Projects />} />
+                  <Route path="/admin/projects/dashboard" element={<ProjectDashboard />} />
+                  <Route path="/admin/questions" element={<Questions />} />
+                  <Route path="/admin/questions/dashboard" element={<QuestionDashboard />} />
+                  <Route path="/admin/feedback" element={<Feedback />} />
+                  <Route path="/admin/feedback/dashboard" element={<FeedbackDashboard />} />
+                  <Route path="/employee/feedback" element={<EmployeeFeedback />} />
+                  <Route path="/employee/feedback/:id" element={<FeedbackForm />} />
+                  <Route path="*" element={<NotFound />} />
+                </Route>
+              </Routes>
+              <Toaster />
+              <Sonner />
+            </div>
           </BrowserRouter>
         </ThemeProvider>
       </NextUIProvider>

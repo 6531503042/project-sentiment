@@ -1,125 +1,144 @@
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
-  ChartPieIcon,
+  ChartBarIcon,
+  FolderIcon,
   QuestionMarkCircleIcon,
   ChatBubbleLeftRightIcon,
-  FolderIcon,
-  Cog6ToothIcon,
-  ArrowLeftOnRectangleIcon,
-  ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon,
-} from "@heroicons/react/20/solid";
-import { cn } from "@/lib/utils";
+  ChevronDownIcon,
+} from "@heroicons/react/24/outline";
+import { Accordion, AccordionItem } from "@nextui-org/react";
 
-const menuItems = [
+const navigation = [
   {
-    path: "/admin/dashboard",
-    name: "Overview",
-    icon: ChartPieIcon,
+    name: 'Overview',
+    href: '/',
+    icon: ChartBarIcon,
+    type: 'link'
   },
   {
-    path: "/admin/question",
-    name: "Questions",
-    icon: QuestionMarkCircleIcon,
-  },
-  {
-    path: "/admin/feedback",
-    name: "Feedback",
-    icon: ChatBubbleLeftRightIcon,
-  },
-  {
-    path: "/admin/project",
-    name: "Projects",
+    name: 'Projects',
     icon: FolderIcon,
+    type: 'group',
+    items: [
+      { name: 'Manage', href: '/admin/projects' },
+      { name: 'Dashboard', href: '/admin/projects/dashboard' }
+    ]
   },
+  {
+    name: 'Questions',
+    icon: QuestionMarkCircleIcon,
+    type: 'group',
+    items: [
+      { name: 'Manage', href: '/admin/questions' },
+      { name: 'Dashboard', href: '/admin/questions/dashboard' }
+    ]
+  },
+  {
+    name: 'Feedback',
+    icon: ChatBubbleLeftRightIcon,
+    type: 'group',
+    items: [
+      { name: 'Manage', href: '/admin/feedback' },
+      { name: 'Dashboard', href: '/admin/feedback/dashboard' }
+    ]
+  }
 ];
 
 const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const router = useRouter();
+  const location = useLocation();
 
-  return (
-    <div
-      className={cn(
-        "h-screen fixed left-0 top-0 z-40 transition-all duration-300 ease-in-out",
-        collapsed ? "w-20" : "w-64",
-        "bg-gradient-to-b from-gray-900 to-gray-800 text-white"
-      )}
-    >
-      <div className="flex flex-col h-full">
-        {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-4">
-          {!collapsed && (
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-              Sentiment
-            </span>
-          )}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="p-2 rounded-lg hover:bg-gray-700/50 transition-colors"
-          >
-            {collapsed ? (
-              <ChevronDoubleRightIcon className="w-5 h-5" />
-            ) : (
-              <ChevronDoubleLeftIcon className="w-5 h-5" />
-            )}
-          </button>
-        </div>
+  const renderNavItem = (item: any) => {
+    if (item.type === 'link') {
+      const isActive = location.pathname === item.href;
+      return (
+        <Link
+          key={item.name}
+          to={item.href}
+          className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+            isActive
+              ? 'bg-primary/10 text-primary'
+              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+          }`}
+        >
+          <item.icon
+            className={`mr-3 h-5 w-5 flex-shrink-0 ${
+              isActive ? 'text-primary' : 'text-gray-400 group-hover:text-gray-500'
+            }`}
+          />
+          {item.name}
+        </Link>
+      );
+    }
 
-        {/* Navigation */}
-        <nav className="flex-1 px-2 py-4">
-          <ul className="space-y-1">
-            {menuItems.map((item) => {
-              const isActive = router.pathname.startsWith(item.path);
+    const isGroupActive = item.items.some((subItem: any) => location.pathname === subItem.href);
+    const Icon = item.icon;
+
+    return (
+      <Accordion
+        key={item.name}
+        variant="light"
+        className="px-0"
+        itemClasses={{
+          base: "py-0 w-full",
+          title: "font-medium text-sm",
+          trigger: `py-2 px-3 rounded-lg transition-all duration-200 data-[hover=true]:bg-gray-100 ${
+            isGroupActive ? 'text-primary' : 'text-gray-600'
+          }`,
+          indicator: "text-gray-400",
+          content: "py-0 px-3"
+        }}
+      >
+        <AccordionItem
+          key={item.name}
+          aria-label={item.name}
+          title={
+            <div className="flex items-center">
+              <Icon className={`mr-3 h-5 w-5 ${isGroupActive ? 'text-primary' : 'text-gray-400'}`} />
+              <span>{item.name}</span>
+            </div>
+          }
+          indicator={<ChevronDownIcon className="h-4 w-4" />}
+        >
+          <div className="flex flex-col space-y-1 pl-8">
+            {item.items.map((subItem: any) => {
+              const isSubItemActive = location.pathname === subItem.href;
               return (
-                <li key={item.path}>
-                  <Link
-                    href={item.path}
-                    className={cn(
-                      "flex items-center px-3 py-2 rounded-lg transition-all duration-200",
-                      "hover:bg-gray-700/50",
-                      isActive
-                        ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white"
-                        : "text-gray-300 hover:text-white"
-                    )}
-                  >
-                    <item.icon className="w-6 h-6 flex-shrink-0" />
-                    {!collapsed && (
-                      <span className="ml-3 text-sm font-medium">{item.name}</span>
-                    )}
-                    {isActive && (
-                      <div className="absolute left-0 w-1 h-8 bg-gradient-to-b from-blue-400 to-purple-500 rounded-r-full" />
-                    )}
-                  </Link>
-                </li>
+                <Link
+                  key={subItem.name}
+                  to={subItem.href}
+                  className={`py-2 text-sm rounded-md transition-colors ${
+                    isSubItemActive
+                      ? 'text-primary font-medium'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  {subItem.name}
+                </Link>
               );
             })}
-          </ul>
-        </nav>
+          </div>
+        </AccordionItem>
+      </Accordion>
+    );
+  };
 
-        {/* Footer */}
-        <div className="p-4 border-t border-gray-700">
-          <ul className="space-y-1">
-            <li>
-              <button
-                className="w-full flex items-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg transition-all duration-200"
-              >
-                <Cog6ToothIcon className="w-6 h-6" />
-                {!collapsed && <span className="ml-3 text-sm">Settings</span>}
-              </button>
-            </li>
-            <li>
-              <button
-                className="w-full flex items-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg transition-all duration-200"
-              >
-                <ArrowLeftOnRectangleIcon className="w-6 h-6" />
-                {!collapsed && <span className="ml-3 text-sm">Logout</span>}
-              </button>
-            </li>
-          </ul>
+  return (
+    <div className="fixed inset-y-0 left-0 z-50 w-64 bg-background/80 backdrop-blur-xl border-r">
+      <div className="flex flex-col h-full">
+        <div className="flex h-14 items-center border-b px-4">
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <ChartBarIcon className="w-5 h-5 text-primary" />
+            </div>
+            <span className="font-semibold text-lg bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/50">
+              Sentiment
+            </span>
+          </Link>
         </div>
+        <nav className="flex-1 space-y-1 p-4 overflow-y-auto">
+          {navigation.map((item) => renderNavItem(item))}
+        </nav>
       </div>
     </div>
   );
