@@ -22,34 +22,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import {
-  PlusCircleIcon,
-  EllipsisHorizontalIcon,
-  ChatBubbleLeftRightIcon,
-  HeartIcon,
-  MagnifyingGlassIcon,
-  FunnelIcon,
-  ArrowPathIcon,
-} from "@heroicons/react/24/outline";
+import { Input } from "@/components/ui/input";
 import { CreateFeedbackDialog } from "@/components/feedback/CreateFeedbackDialog";
-
-// Import specific emotion icons
-import { FaceSmileIcon as HappyIcon } from "@heroicons/react/24/solid";
-import { FaceFrownIcon as SadIcon } from "@heroicons/react/24/solid";
-import { NoSymbolIcon as NeutralIcon } from "@heroicons/react/24/solid";
-import TrashIcon from "@heroicons/react/20/solid/TrashIcon";
-
-const sentimentColors = {
-  positive: "bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border-green-200",
-  neutral: "bg-gradient-to-r from-yellow-50 to-amber-50 text-yellow-700 border-yellow-200",
-  negative: "bg-gradient-to-r from-red-50 to-rose-50 text-red-700 border-red-200",
-};
-
-const sentimentIcons = {
-  positive: HappyIcon,
-  neutral: NeutralIcon,
-  negative: SadIcon,
-};
+import { Plus, Search, SlidersHorizontal, MoreHorizontal, MessageSquare, Heart, Smile } from "lucide-react";
 
 const feedbacks = [
   {
@@ -77,35 +52,33 @@ const feedbacks = [
 
 const FeedbackManage = () => {
   return (
-    <div className="min-h-screen bg-gray-50/30">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50/50 to-white/90">
       <div className="max-w-[1600px] mx-auto p-8 space-y-8">
-        {/* Header Section */}
+        {/* Header Section with improved styling */}
         <div className="flex justify-between items-start">
-          <div className="space-y-1">
-            <h1 className="text-3xl font-bold tracking-tight">Feedback Management</h1>
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+              Feedback Management
+            </h1>
             <p className="text-gray-500 max-w-2xl">
               Create and manage feedback forms to gather insights from your users and team members.
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" className="gap-2">
-              <ArrowPathIcon className="h-4 w-4" />
-              Refresh
-            </Button>
             <CreateFeedbackDialog />
           </div>
         </div>
 
-        {/* Stats Grid */}
+        {/* Stats Grid with enhanced visual design */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-r from-violet-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Card className="relative overflow-hidden group transition-all duration-300 hover:shadow-lg">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-violet-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Total Responses
               </CardTitle>
-              <div className="h-8 w-8 rounded-full bg-violet-100 flex items-center justify-center">
-                <ChatBubbleLeftRightIcon className="h-4 w-4 text-violet-600" />
+              <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                <MessageSquare className="h-5 w-5 text-blue-600" />
               </div>
             </CardHeader>
             <CardContent>
@@ -119,14 +92,14 @@ const FeedbackManage = () => {
             </CardContent>
           </Card>
 
-          <Card className="relative overflow-hidden group">
+          <Card className="relative overflow-hidden group transition-all duration-300 hover:shadow-lg">
             <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Average Rating
               </CardTitle>
-              <div className="h-8 w-8 rounded-full bg-rose-100 flex items-center justify-center">
-                <HeartIcon className="h-4 w-4 text-rose-600" />
+              <div className="h-10 w-10 rounded-full bg-rose-100 flex items-center justify-center">
+                <Heart className="h-5 w-5 text-rose-600" />
               </div>
             </CardHeader>
             <CardContent>
@@ -140,14 +113,14 @@ const FeedbackManage = () => {
             </CardContent>
           </Card>
 
-          <Card className="relative overflow-hidden group">
+          <Card className="relative overflow-hidden group transition-all duration-300 hover:shadow-lg">
             <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Positive Sentiment
               </CardTitle>
-              <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
-                <HappyIcon className="h-4 w-4 text-emerald-600" />
+              <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                <Smile className="h-5 w-5 text-emerald-600" />
               </div>
             </CardHeader>
             <CardContent>
@@ -162,10 +135,10 @@ const FeedbackManage = () => {
           </Card>
         </div>
 
-        {/* Main Content */}
-        <Card className="relative overflow-hidden">
+        {/* Main Content with enhanced table design */}
+        <Card className="relative overflow-hidden border-0 shadow-lg">
           <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white/20 pointer-events-none" />
-          <CardHeader className="space-y-6">
+          <CardHeader className="space-y-6 border-b">
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle>Feedback Forms</CardTitle>
@@ -175,21 +148,21 @@ const FeedbackManage = () => {
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  <input
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input
                     type="text"
                     placeholder="Search forms..."
-                    className="pl-9 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    className="pl-9 pr-4 w-[300px] bg-white/50 backdrop-blur-sm"
                   />
                 </div>
-                <Button variant="outline" size="icon">
-                  <FunnelIcon className="h-4 w-4" />
+                <Button variant="outline" size="icon" className="bg-white">
+                  <SlidersHorizontal className="h-4 w-4" />
                 </Button>
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="rounded-lg border border-gray-100 overflow-hidden">
+            <div className="rounded-lg border border-gray-100 overflow-hidden bg-white/50 backdrop-blur-sm">
               <Table>
                 <TableHeader className="bg-gray-50/50">
                   <TableRow>
@@ -203,81 +176,85 @@ const FeedbackManage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {feedbacks.map((feedback) => {
-                    const SentimentIcon = sentimentIcons[feedback.sentiment as keyof typeof sentimentIcons];
-                    return (
-                      <TableRow key={feedback.id} className="group hover:bg-gray-50/50">
-                        <TableCell>
-                          <div>
-                            <div className="font-medium text-gray-900">{feedback.title}</div>
-                            <div className="text-sm text-gray-500">
-                              {feedback.description}
-                            </div>
+                  {feedbacks.map((feedback) => (
+                    <TableRow key={feedback.id} className="group hover:bg-gray-50/50">
+                      <TableCell>
+                        <div>
+                          <div className="font-medium text-gray-900">{feedback.title}</div>
+                          <div className="text-sm text-gray-500">
+                            {feedback.description}
                           </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            className={`${
-                              sentimentColors[feedback.sentiment as keyof typeof sentimentColors]
-                            } inline-flex items-center gap-1 px-2.5 py-1 rounded-full border shadow-sm`}
-                          >
-                            <SentimentIcon className="h-4 w-4" />
-                            <span className="capitalize">{feedback.sentiment}</span>
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="font-medium">{feedback.responses}</div>
-                          <div className="text-xs text-gray-500">Total responses</div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="bg-white">
-                            {feedback.category}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            className={
-                              feedback.status === "active"
-                                ? "bg-green-100 text-green-700 border-green-200"
-                                : "bg-gray-100 text-gray-700 border-gray-200"
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          className={`
+                            ${
+                              feedback.sentiment === 'positive'
+                                ? 'bg-green-100 text-green-700 border-green-200'
+                                : feedback.sentiment === 'neutral'
+                                ? 'bg-yellow-100 text-yellow-700 border-yellow-200'
+                                : 'bg-red-100 text-red-700 border-red-200'
                             }
-                          >
-                            {feedback.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="text-sm text-gray-500">{feedback.date}</div>
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <EllipsisHorizontalIcon className="h-5 w-5" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                              <DropdownMenuItem className="flex items-center gap-2">
-                                <ChatBubbleLeftRightIcon className="h-4 w-4" />
-                                View Responses
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="flex items-center gap-2">
-                                <PlusCircleIcon className="h-4 w-4" />
-                                Edit Form
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="flex items-center gap-2 text-red-600">
-                                <TrashIcon className="h-4 w-4" />
-                                Delete Form
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                            inline-flex items-center gap-1 px-2.5 py-1 rounded-full border shadow-sm
+                          `}
+                        >
+                          <Smile className="h-4 w-4" />
+                          <span className="capitalize">{feedback.sentiment}</span>
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="font-medium">{feedback.responses}</div>
+                        <div className="text-xs text-gray-500">Total responses</div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="bg-white">
+                          {feedback.category}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          className={
+                            feedback.status === "active"
+                              ? "bg-green-100 text-green-700 border-green-200"
+                              : "bg-gray-100 text-gray-700 border-gray-200"
+                          }
+                        >
+                          {feedback.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm text-gray-500">{feedback.date}</div>
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <MoreHorizontal className="h-5 w-5" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuItem className="flex items-center gap-2">
+                              <MessageSquare className="h-4 w-4" />
+                              View Responses
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex items-center gap-2">
+                              <Plus className="h-4 w-4" />
+                              Edit Form
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex items-center gap-2 text-red-600">
+                              <Trash className="h-4 w-4" />
+                              Delete Form
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </div>

@@ -18,13 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  ChatBubbleBottomCenterTextIcon,
-  ClipboardDocumentListIcon,
-  StarIcon,
-  PlusCircleIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Plus, MessageSquare, Star, ListChecks } from "lucide-react";
 import { DatePicker } from "@/components/ui/date-picker";
 
 const feedbackTypes = [
@@ -32,7 +26,7 @@ const feedbackTypes = [
     id: "satisfaction",
     name: "Satisfaction Survey",
     description: "Measure user satisfaction and happiness",
-    icon: StarIcon,
+    icon: Star,
     gradient: "from-amber-50 to-yellow-50",
     iconColor: "text-amber-600",
   },
@@ -40,7 +34,7 @@ const feedbackTypes = [
     id: "feature",
     name: "Feature Feedback",
     description: "Gather feedback on specific features",
-    icon: ClipboardDocumentListIcon,
+    icon: ListChecks,
     gradient: "from-blue-50 to-sky-50",
     iconColor: "text-blue-600",
   },
@@ -48,7 +42,7 @@ const feedbackTypes = [
     id: "general",
     name: "General Feedback",
     description: "Collect open-ended user feedback",
-    icon: ChatBubbleBottomCenterTextIcon,
+    icon: MessageSquare,
     gradient: "from-purple-50 to-violet-50",
     iconColor: "text-purple-600",
   },
@@ -70,18 +64,22 @@ export function CreateFeedbackDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
-          <PlusCircleIcon className="h-4 w-4" />
+        <Button className="gap-2 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300">
+          <Plus className="h-5 w-5" />
           New Feedback Form
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Create Feedback Form</DialogTitle>
+          <DialogTitle className="text-2xl flex items-center gap-2">
+            <MessageSquare className="h-6 w-6 text-primary" />
+            Create Feedback Form
+          </DialogTitle>
           <DialogDescription>
-            Design a feedback form to gather valuable user insights.
+            Design a feedback form to gather valuable user insights
           </DialogDescription>
         </DialogHeader>
+
         <div className="space-y-8 py-4">
           {/* Feedback Type Selection */}
           <div className="space-y-4">
@@ -114,7 +112,7 @@ export function CreateFeedbackDialog() {
             </div>
           </div>
 
-          {/* Feedback Form Details */}
+          {/* Form Details */}
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="title">Form Title</Label>
@@ -156,58 +154,6 @@ export function CreateFeedbackDialog() {
                 <DatePicker />
               </div>
             </div>
-
-            {/* Satisfaction Survey Specific */}
-            {feedbackType === "satisfaction" && (
-              <div className="space-y-4">
-                <Label>Rating Scale</Label>
-                <div className="grid grid-cols-5 gap-2">
-                  {[1, 2, 3, 4, 5].map((rating) => (
-                    <button
-                      key={rating}
-                      className="p-4 rounded-xl border-2 border-transparent hover:border-amber-200 bg-gradient-to-b from-amber-50 to-amber-100/50 space-y-2"
-                    >
-                      <div className="h-8 w-8 mx-auto rounded-lg bg-white/80 backdrop-blur flex items-center justify-center text-amber-600">
-                        <StarIcon className="h-5 w-5" />
-                      </div>
-                      <div className="text-sm font-medium text-center">{rating}</div>
-                    </button>
-                  ))}
-                </div>
-                <p className="text-sm text-gray-500">Users will rate on a scale of 1-5 stars</p>
-              </div>
-            )}
-
-            {/* Feature Feedback Specific */}
-            {feedbackType === "feature" && (
-              <div className="space-y-4">
-                <Label>Feature Selection</Label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-4 rounded-xl border-2 border-transparent hover:border-blue-200 bg-gradient-to-b from-blue-50 to-blue-100/50">
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-lg bg-white/80 backdrop-blur flex items-center justify-center text-blue-600">
-                        <ClipboardDocumentListIcon className="h-5 w-5" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-sm font-medium">Specific Feature</div>
-                        <p className="text-xs text-gray-500">Focus on one feature</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-4 rounded-xl border-2 border-transparent hover:border-blue-200 bg-gradient-to-b from-blue-50 to-blue-100/50">
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-lg bg-white/80 backdrop-blur flex items-center justify-center text-blue-600">
-                        <ChatBubbleBottomCenterTextIcon className="h-5 w-5" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-sm font-medium">Multiple Features</div>
-                        <p className="text-xs text-gray-500">Gather broader feedback</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
@@ -215,8 +161,11 @@ export function CreateFeedbackDialog() {
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
-          <Button className="gap-2" onClick={() => setOpen(false)}>
-            <PlusCircleIcon className="h-4 w-4" />
+          <Button 
+            className="gap-2 bg-gradient-to-r from-primary to-primary/90"
+            onClick={() => setOpen(false)}
+          >
+            <Plus className="h-4 w-4" />
             Create Form
           </Button>
         </div>
