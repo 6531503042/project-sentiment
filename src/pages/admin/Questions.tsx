@@ -1,4 +1,3 @@
-
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { Header } from "@/components/layout/Header";
@@ -25,10 +24,6 @@ const Questions = () => {
     },
   ]);
 
-  const handleCreateQuestion = (newQuestion: Question) => {
-    setQuestions([...questions, newQuestion]);
-  };
-
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-ata-gray">
@@ -41,10 +36,7 @@ const Questions = () => {
                 <h1 className="text-2xl font-semibold text-ata-blue">Questions</h1>
                 <p className="text-ata-text mt-2">Manage feedback questions</p>
               </div>
-              <CreateQuestionDialog 
-                onQuestionCreate={handleCreateQuestion}
-                questionsCount={questions.length}
-              />
+              <CreateQuestionDialog />
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

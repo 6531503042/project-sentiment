@@ -19,24 +19,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SmilePlus, Frown, Meh, Plus, Edit, Trash2, PlusCircle, MinusCircle } from "lucide-react";
+import { SmilePlus, Frown, Meh, Plus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Question } from "@/types/question";
 
 interface Answer {
   text: string;
   value: string;
   icon?: React.ReactNode;
-}
-
-type QuestionType = "TEXT" | "MULTIPLE_CHOICE" | "SENTIMENT";
-
-interface Question {
-  id: number;
-  text: string;
-  description: string;
-  required: boolean;
-  type: QuestionType;
-  answers: Answer[];
 }
 
 const defaultSentimentAnswers: Answer[] = [
@@ -50,44 +40,13 @@ export function CreateQuestionDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [newQuestion, setNewQuestion] = useState<Partial<Question>>({
     text: "",
-    description: "",
-    type: "TEXT",
+    content: "",
+    type: "RATING",
     required: true,
+    category: "WORK_ENVIRONMENT",
+    answerType: "SATISFACTION_BASE",
     answers: [],
   });
-
-  const handleTypeChange = (value: QuestionType) => {
-    setNewQuestion({
-      ...newQuestion,
-      type: value,
-      answers: value === "SENTIMENT" ? defaultSentimentAnswers : [],
-    });
-  };
-
-  const handleAddAnswer = () => {
-    if (newQuestion.type !== "SENTIMENT") {
-      setNewQuestion({
-        ...newQuestion,
-        answers: [...(newQuestion.answers || []), { text: "", value: "" }],
-      });
-    }
-  };
-
-  const handleRemoveAnswer = (index: number) => {
-    setNewQuestion({
-      ...newQuestion,
-      answers: (newQuestion.answers || []).filter((_, i) => i !== index),
-    });
-  };
-
-  const handleAnswerChange = (index: number, field: keyof Answer, value: string) => {
-    setNewQuestion({
-      ...newQuestion,
-      answers: (newQuestion.answers || []).map((answer, i) =>
-        i === index ? { ...answer, [field]: value } : answer
-      ),
-    });
-  };
 
   const handleCreateQuestion = () => {
     if (!newQuestion.text) {
@@ -107,9 +66,11 @@ export function CreateQuestionDialog() {
     setIsOpen(false);
     setNewQuestion({
       text: "",
-      description: "",
-      type: "TEXT",
+      content: "",
+      type: "RATING",
       required: true,
+      category: "WORK_ENVIRONMENT",
+      answerType: "SATISFACTION_BASE",
       answers: [],
     });
   };
@@ -156,7 +117,7 @@ export function CreateQuestionDialog() {
             onClick={handleAddAnswer}
             className="flex items-center gap-2"
           >
-            <PlusCircle className="h-4 w-4" />
+            <Plus className="h-4 w-4" />
             Add Option
           </Button>
         </div>
@@ -213,9 +174,9 @@ export function CreateQuestionDialog() {
             <div>
               <Label>Description</Label>
               <Textarea
-                value={newQuestion.description}
+                value={newQuestion.content}
                 onChange={(e) =>
-                  setNewQuestion({ ...newQuestion, description: e.target.value })
+                  setNewQuestion({ ...newQuestion, content: e.target.value })
                 }
                 placeholder="Add additional context"
               />
@@ -225,20 +186,21 @@ export function CreateQuestionDialog() {
               <Label>Question Type</Label>
               <Select
                 value={newQuestion.type}
-                onValueChange={(value: QuestionType) => handleTypeChange(value)}
+                onValueChange={(value: Question['type']) => 
+                  setNewQuestion({ ...newQuestion, type: value })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select question type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="TEXT">Text Response</SelectItem>
+                  <SelectItem value="RATING">Rating</SelectItem>
+                  <SelectItem value="TEXT">Text</SelectItem>
                   <SelectItem value="MULTIPLE_CHOICE">Multiple Choice</SelectItem>
-                  <SelectItem value="SENTIMENT">Sentiment Rating</SelectItem>
+                  <SelectItem value="SINGLE_CHOICE">Single Choice</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-
-            {renderAnswerFields()}
           </div>
         </div>
 
