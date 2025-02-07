@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SmilePlus, Frown, Meh, Plus } from "lucide-react";
+import { SmilePlus, Frown, Meh, Plus, Minus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Question } from "@/types/question";
 
@@ -75,12 +75,34 @@ export function CreateQuestionDialog() {
     });
   };
 
+  const handleAddAnswer = () => {
+    setNewQuestion(prev => ({
+      ...prev,
+      answers: [...(prev.answers || []), { text: "", value: String(prev.answers?.length || 0) }]
+    }));
+  };
+
+  const handleAnswerChange = (index: number, field: keyof Answer, value: string) => {
+    setNewQuestion(prev => {
+      const newAnswers = [...(prev.answers || [])];
+      newAnswers[index] = { ...newAnswers[index], [field]: value };
+      return { ...prev, answers: newAnswers };
+    });
+  };
+
+  const handleRemoveAnswer = (index: number) => {
+    setNewQuestion(prev => ({
+      ...prev,
+      answers: prev.answers?.filter((_, i) => i !== index) || []
+    }));
+  };
+
   const renderAnswerFields = () => {
     if (newQuestion.type === "TEXT") {
       return null;
     }
 
-    if (newQuestion.type === "SENTIMENT") {
+    if (newQuestion.type === "RATING") {
       return (
         <div className="space-y-4">
           <Label>Sentiment Options</Label>
@@ -134,7 +156,7 @@ export function CreateQuestionDialog() {
               size="sm"
               onClick={() => handleRemoveAnswer(index)}
             >
-              <MinusCircle className="h-4 w-4 text-red-500" />
+              <Minus className="h-4 w-4 text-red-500" />
             </Button>
           </div>
         ))}
