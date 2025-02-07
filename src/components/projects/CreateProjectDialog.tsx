@@ -58,20 +58,10 @@ const priorities = [
   },
 ];
 
-const categories = [
-  "Development",
-  "Design",
-  "Marketing",
-  "Research",
-  "Operations",
-  "Other",
-];
-
 export function CreateProjectDialog() {
   const [open, setOpen] = useState(false);
   const [priority, setPriority] = useState("");
   const [teamMembers, setTeamMembers] = useState([""]);
-  const [tasks, setTasks] = useState([""]);
 
   const addTeamMember = () => {
     setTeamMembers([...teamMembers, ""]);
@@ -87,35 +77,25 @@ export function CreateProjectDialog() {
     setTeamMembers(newTeamMembers);
   };
 
-  const addTask = () => {
-    setTasks([...tasks, ""]);
-  };
-
-  const removeTask = (index: number) => {
-    setTasks(tasks.filter((_, i) => i !== index));
-  };
-
-  const updateTask = (index: number, value: string) => {
-    const newTasks = [...tasks];
-    newTasks[index] = value;
-    setTasks(newTasks);
-  };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
-          <PlusCircleIcon className="h-4 w-4" />
+        <Button className="gap-2 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300">
+          <PlusCircleIcon className="h-5 w-5" />
           New Project
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Create New Project</DialogTitle>
+          <DialogTitle className="text-2xl flex items-center gap-2">
+            <RocketLaunchIcon className="h-6 w-6 text-primary" />
+            Create New Project
+          </DialogTitle>
           <DialogDescription>
-            Launch a new project and set it up for success.
+            Launch a new project and set it up for success
           </DialogDescription>
         </DialogHeader>
+
         <div className="space-y-8 py-4">
           {/* Project Priority Selection */}
           <div className="space-y-4">
@@ -170,21 +150,9 @@ export function CreateProjectDialog() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category} value={category.toLowerCase()}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Start Date</Label>
+                <DatePicker />
               </div>
-
               <div className="space-y-2">
                 <Label>Due Date</Label>
                 <DatePicker />
@@ -194,7 +162,19 @@ export function CreateProjectDialog() {
 
           {/* Team Members */}
           <div className="space-y-4">
-            <Label>Team Members</Label>
+            <div className="flex justify-between items-center">
+              <Label>Team Members</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addTeamMember}
+                className="gap-2"
+              >
+                <PlusIcon className="h-4 w-4" />
+                Add Member
+              </Button>
+            </div>
             <div className="space-y-3">
               {teamMembers.map((member, index) => (
                 <div key={index} className="flex items-center gap-2">
@@ -219,56 +199,6 @@ export function CreateProjectDialog() {
                   )}
                 </div>
               ))}
-              {teamMembers.length < 8 && (
-                <Button
-                  variant="outline"
-                  className="w-full gap-2"
-                  onClick={addTeamMember}
-                >
-                  <PlusIcon className="h-4 w-4" />
-                  Add Team Member
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* Initial Tasks */}
-          <div className="space-y-4">
-            <Label>Initial Tasks</Label>
-            <div className="space-y-3">
-              {tasks.map((task, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-lg bg-emerald-100 flex items-center justify-center">
-                    <ChartBarIcon className="h-4 w-4 text-emerald-600" />
-                  </div>
-                  <Input
-                    value={task}
-                    onChange={(e) => updateTask(index, e.target.value)}
-                    placeholder="Enter task description"
-                    className="flex-1"
-                  />
-                  {tasks.length > 1 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeTask(index)}
-                      className="text-gray-400 hover:text-red-600"
-                    >
-                      <TrashIcon className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-              {tasks.length < 8 && (
-                <Button
-                  variant="outline"
-                  className="w-full gap-2"
-                  onClick={addTask}
-                >
-                  <PlusIcon className="h-4 w-4" />
-                  Add Task
-                </Button>
-              )}
             </div>
           </div>
         </div>
@@ -277,7 +207,10 @@ export function CreateProjectDialog() {
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
-          <Button className="gap-2" onClick={() => setOpen(false)}>
+          <Button 
+            className="gap-2 bg-gradient-to-r from-primary to-primary/90"
+            onClick={() => setOpen(false)}
+          >
             <RocketLaunchIcon className="h-4 w-4" />
             Launch Project
           </Button>
