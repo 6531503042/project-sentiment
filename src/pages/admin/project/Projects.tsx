@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   Clock,
-  RocketLaunch,
+  Rocket,
   Search,
   SlidersHorizontal,
   Plus,
@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface Project {
   id: number;
@@ -82,7 +83,7 @@ const Projects = () => {
                   <div className="text-2xl font-bold">12</div>
                 </div>
                 <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                  <RocketLaunch className="h-5 w-5 text-blue-600" />
+                  <Rocket className="h-5 w-5 text-blue-600" />
                 </div>
               </div>
             </div>
