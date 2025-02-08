@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Card,
@@ -24,7 +25,17 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { CreateFeedbackDialog } from "@/components/feedback/CreateFeedbackDialog";
-import { Plus, Search, SlidersHorizontal, MoreHorizontal, MessageSquare, Heart, Smile, Trash2 } from "lucide-react";
+import {
+  Search,
+  SlidersHorizontal,
+  MoreHorizontal,
+  MessageSquare,
+  Heart,
+  Smile,
+  Trash2,
+  Plus,
+  Edit,
+} from "lucide-react";
 
 const feedbacks = [
   {
@@ -54,31 +65,29 @@ const FeedbackManage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50/50 to-white/90">
       <div className="max-w-[1600px] mx-auto p-8 space-y-8">
-        {/* Header Section with improved styling */}
+        {/* Header Section */}
         <div className="flex justify-between items-start">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-              Feedback Management
+            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+              Feedback Forms
             </h1>
             <p className="text-gray-500 max-w-2xl">
-              Create and manage feedback forms to gather insights from your users and team members.
+              Create and manage feedback forms to gather insights from your users
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <CreateFeedbackDialog />
-          </div>
+          <CreateFeedbackDialog />
         </div>
 
-        {/* Stats Grid with enhanced visual design */}
+        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="relative overflow-hidden group transition-all duration-300 hover:shadow-lg">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-violet-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Total Responses
               </CardTitle>
-              <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                <MessageSquare className="h-5 w-5 text-blue-600" />
+              <div className="h-10 w-10 rounded-full bg-rose-100 flex items-center justify-center">
+                <MessageSquare className="h-5 w-5 text-rose-600" />
               </div>
             </CardHeader>
             <CardContent>
@@ -92,14 +101,14 @@ const FeedbackManage = () => {
             </CardContent>
           </Card>
 
-          <Card className="relative overflow-hidden group transition-all duration-300 hover:shadow-lg">
-            <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-rose-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Average Rating
               </CardTitle>
-              <div className="h-10 w-10 rounded-full bg-rose-100 flex items-center justify-center">
-                <Heart className="h-5 w-5 text-rose-600" />
+              <div className="h-10 w-10 rounded-full bg-pink-100 flex items-center justify-center">
+                <Heart className="h-5 w-5 text-pink-600" />
               </div>
             </CardHeader>
             <CardContent>
@@ -113,7 +122,7 @@ const FeedbackManage = () => {
             </CardContent>
           </Card>
 
-          <Card className="relative overflow-hidden group transition-all duration-300 hover:shadow-lg">
+          <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300">
             <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
@@ -135,7 +144,7 @@ const FeedbackManage = () => {
           </Card>
         </div>
 
-        {/* Main Content with enhanced table design */}
+        {/* Main Content */}
         <Card className="relative overflow-hidden border-0 shadow-lg">
           <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white/20 pointer-events-none" />
           <CardHeader className="space-y-6 border-b">
@@ -243,7 +252,7 @@ const FeedbackManage = () => {
                               View Responses
                             </DropdownMenuItem>
                             <DropdownMenuItem className="flex items-center gap-2">
-                              <Plus className="h-4 w-4" />
+                              <Edit className="h-4 w-4" />
                               Edit Form
                             </DropdownMenuItem>
                             <DropdownMenuItem className="flex items-center gap-2 text-red-600">
