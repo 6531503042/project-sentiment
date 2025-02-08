@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Dialog,
@@ -64,7 +65,7 @@ export function CreateFeedbackDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300">
+        <Button className="gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
           <Plus className="h-5 w-5" />
           New Feedback Form
         </Button>
@@ -162,7 +163,7 @@ export function CreateFeedbackDialog() {
             Cancel
           </Button>
           <Button 
-            className="gap-2 bg-gradient-to-r from-primary to-primary/90"
+            className="gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700"
             onClick={() => setOpen(false)}
           >
             <Plus className="h-4 w-4" />
