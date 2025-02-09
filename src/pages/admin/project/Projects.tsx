@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -24,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { CreateProjectDialog } from "@/components/projects/CreateProjectDialog";
 
 interface Project {
   id: number;
@@ -64,12 +64,7 @@ const Projects = () => {
               Manage and track your feedback collection projects
             </p>
           </div>
-          <Button
-            className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            <Plus className="h-4 w-4" />
-            New Project
-          </Button>
+          <CreateProjectDialog />
         </div>
 
         {/* Stats Cards */}

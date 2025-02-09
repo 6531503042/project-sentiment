@@ -1,14 +1,15 @@
+
 import React from "react";
 import {
-  ChartBarIcon,
-  ClockIcon,
-  RocketLaunchIcon,
-  UserGroupIcon,
-  CalendarIcon,
-  CheckCircleIcon,
-  ArrowPathIcon,
-  ArrowTrendingUpIcon,
-} from "@heroicons/react/24/outline";
+  Users,
+  Calendar,
+  Clock,
+  Activity,
+  MessageSquare,
+  BarChart3,
+  FileText,
+  ArrowUpRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,38 +25,38 @@ const metrics = [
     title: "Active Projects",
     value: "12",
     change: "+2",
-    description: "Currently in progress",
-    icon: RocketLaunchIcon,
-    gradient: "from-indigo-500/10 to-blue-500/10",
-    iconBg: "bg-indigo-100",
-    iconColor: "text-indigo-600",
+    description: "Projects in progress",
+    icon: Activity,
+    gradient: "from-blue-500/10 to-indigo-500/10",
+    iconBg: "bg-blue-100",
+    iconColor: "text-blue-600",
   },
   {
     title: "Team Members",
     value: "48",
     change: "+5",
-    description: "Across all projects",
-    icon: UserGroupIcon,
+    description: "Total members across projects",
+    icon: Users,
     gradient: "from-violet-500/10 to-purple-500/10",
     iconBg: "bg-violet-100",
     iconColor: "text-violet-600",
   },
   {
-    title: "Completed Tasks",
+    title: "Feedback Forms",
     value: "156",
     change: "+23",
-    description: "This month",
-    icon: CheckCircleIcon,
+    description: "Total feedback collected",
+    icon: MessageSquare,
     gradient: "from-emerald-500/10 to-green-500/10",
     iconBg: "bg-emerald-100",
     iconColor: "text-emerald-600",
   },
   {
-    title: "Average Progress",
-    value: "72%",
-    change: "+8%",
-    description: "Completion rate",
-    icon: ChartBarIcon,
+    title: "Questions",
+    value: "280",
+    change: "+15",
+    description: "Active questions",
+    icon: FileText,
     gradient: "from-amber-500/10 to-yellow-500/10",
     iconBg: "bg-amber-100",
     iconColor: "text-amber-600",
@@ -71,12 +72,12 @@ const ProjectDashboard = () => {
           <div className="space-y-1">
             <h1 className="text-3xl font-bold tracking-tight">Project Analytics</h1>
             <p className="text-gray-500 max-w-2xl">
-              Monitor project performance and team productivity metrics
+              Monitor project performance and feedback metrics
             </p>
           </div>
           <Button variant="outline" className="gap-2">
-            <ArrowPathIcon className="h-4 w-4" />
-            Refresh Data
+            <Clock className="h-4 w-4" />
+            Last 30 Days
           </Button>
         </div>
 
@@ -111,12 +112,25 @@ const ProjectDashboard = () => {
           <Card className="relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white/20 pointer-events-none" />
             <CardHeader>
-              <CardTitle>Project Progress</CardTitle>
-              <CardDescription>Overall completion status across projects</CardDescription>
+              <CardTitle>Project Timeline</CardTitle>
+              <CardDescription>Project start and end dates distribution</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px] flex items-center justify-center text-gray-500">
-                Chart will be implemented here
+                Timeline chart will be implemented here showing project durations
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white/20 pointer-events-none" />
+            <CardHeader>
+              <CardTitle>Feedback Distribution</CardTitle>
+              <CardDescription>Feedback categories and response rates</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[300px] flex items-center justify-center text-gray-500">
+                Distribution chart will show feedback by category
               </div>
             </CardContent>
           </Card>
@@ -125,11 +139,24 @@ const ProjectDashboard = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white/20 pointer-events-none" />
             <CardHeader>
               <CardTitle>Team Activity</CardTitle>
-              <CardDescription>Recent updates and milestones</CardDescription>
+              <CardDescription>Member participation and engagement</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px] flex items-center justify-center text-gray-500">
-                Chart will be implemented here
+                Activity chart will show member participation
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white/20 pointer-events-none" />
+            <CardHeader>
+              <CardTitle>Question Analytics</CardTitle>
+              <CardDescription>Question types and response patterns</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[300px] flex items-center justify-center text-gray-500">
+                Question analytics chart will be implemented here
               </div>
             </CardContent>
           </Card>
