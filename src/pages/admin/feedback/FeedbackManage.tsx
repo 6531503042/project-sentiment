@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -36,6 +36,7 @@ import {
   Plus,
   Edit,
 } from "lucide-react";
+import { Project, Question, Feedback } from "@/types/feedback";
 
 const feedbacks = [
   {
@@ -62,6 +63,33 @@ const feedbacks = [
 ];
 
 const FeedbackManage = () => {
+  // Add state for dialog control and form data
+  const [open, setOpen] = useState(false);
+  const [projects] = useState<Project[]>([
+    { id: 1, name: "Project A", members: [{ id: 1, name: "John Doe" }] },
+    { id: 2, name: "Project B", members: [{ id: 2, name: "Jane Smith" }] },
+  ]);
+  const [questions] = useState<Question[]>([
+    { id: 1, text: "How satisfied are you?", type: "RATING" },
+    { id: 2, text: "Any suggestions?", type: "TEXT" },
+  ]);
+  const [newFeedback, setNewFeedback] = useState<Partial<Feedback>>({
+    name: "",
+    projectId: 0,
+    description: "",
+    feedbackStartDate: "",
+    feedbackEndDate: "",
+    status: "upcoming",
+    questionIds: [],
+    responseCount: 0,
+  });
+
+  const handleCreateFeedback = () => {
+    // Handle feedback creation logic here
+    console.log("Creating feedback:", newFeedback);
+    setOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50/50 to-white/90">
       <div className="max-w-[1600px] mx-auto p-8 space-y-8">
@@ -75,7 +103,15 @@ const FeedbackManage = () => {
               Create and manage feedback forms to gather insights from your users
             </p>
           </div>
-          <CreateFeedbackDialog />
+          <CreateFeedbackDialog
+            open={open}
+            onOpenChange={setOpen}
+            projects={projects}
+            questions={questions}
+            newFeedback={newFeedback}
+            setNewFeedback={setNewFeedback}
+            onCreateFeedback={handleCreateFeedback}
+          />
         </div>
 
         {/* Stats Grid */}
