@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Dialog,
@@ -22,6 +21,8 @@ import {
 import { Plus, MessageSquare, Star, ListChecks, HandHeart, MessageCircle, Megaphone } from "lucide-react";
 import { DatePicker } from "@/components/ui/date-picker";
 import { cn } from "@/lib/utils";
+import { Project, Question, Feedback } from "@/types/feedback";
+import { Dispatch, SetStateAction } from "react";
 
 const feedbackTypes = [
   {
@@ -62,35 +63,29 @@ const categories = [
   "Other",
 ];
 
-interface Question {
-  id: number;
-  text: string;
-  type: string;
+interface CreateFeedbackDialogProps {
+  open: boolean;
+  onOpenChange: Dispatch<SetStateAction<boolean>>;
+  projects: Project[];
+  questions: Question[];
+  newFeedback: Partial<Feedback>;
+  setNewFeedback: Dispatch<SetStateAction<Partial<Feedback>>>;
+  onCreateFeedback: () => void;
 }
 
-export function CreateFeedbackDialog() {
-  const [open, setOpen] = useState(false);
+export const CreateFeedbackDialog: React.FC<CreateFeedbackDialogProps> = ({
+  open,
+  onOpenChange,
+  projects,
+  questions,
+  newFeedback,
+  setNewFeedback,
+  onCreateFeedback,
+}) => {
   const [feedbackType, setFeedbackType] = useState("");
   const [selectedQuestions, setSelectedQuestions] = useState<number[]>([]);
 
   // Sample questions - in a real app, these would come from your backend
-  const questions: Question[] = [
-    {
-      id: 1,
-      text: "How satisfied are you with our service?",
-      type: "SENTIMENT",
-    },
-    {
-      id: 2,
-      text: "What features would you like to see improved?",
-      type: "TEXT",
-    },
-    {
-      id: 3,
-      text: "Would you recommend our product to others?",
-      type: "SINGLE_CHOICE",
-    },
-  ];
 
   const handleQuestionToggle = (questionId: number) => {
     setSelectedQuestions(prev =>
@@ -101,7 +96,7 @@ export function CreateFeedbackDialog() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button className="gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
           <Plus className="h-5 w-5" />
@@ -256,14 +251,14 @@ export function CreateFeedbackDialog() {
         <div className="flex justify-end gap-3 pt-6 border-t">
           <Button
             variant="outline"
-            onClick={() => setOpen(false)}
+            onClick={() => onOpenChange(false)}
             className="px-6"
           >
             Cancel
           </Button>
           <Button 
             className="gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 px-6"
-            onClick={() => setOpen(false)}
+            onClick={() => onCreateFeedback()}
           >
             <Plus className="h-4 w-4" />
             Create Form
