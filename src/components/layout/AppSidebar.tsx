@@ -8,6 +8,7 @@ import {
   FileText,
   ChevronDown,
   Settings,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -63,6 +64,14 @@ export function AppSidebar() {
       children: [
         { label: "Manage", href: "/admin/feedback" },
         { label: "Dashboard", href: "/admin/feedback/dashboard" },
+      ],
+    },
+    {
+      label: "Scores",
+      icon: <Star className="w-5 h-5" />,
+      children: [
+        { label: "Manage", href: "/admin/scores" },
+        { label: "Dashboard", href: "/admin/scores/dashboard" },
       ],
     },
     {
