@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -38,7 +39,7 @@ export function AppSidebar() {
 
   const navItems: NavItem[] = [
     {
-      label: "Dashboard",
+      label: "Overview",
       href: "/",
       icon: <LayoutDashboard className="w-5 h-5" />,
     },
@@ -73,11 +74,6 @@ export function AppSidebar() {
         { label: "Manage", href: "/admin/scores" },
         { label: "Dashboard", href: "/admin/scores/dashboard" },
       ],
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-      icon: <Settings className="w-5 h-5" />,
     },
   ];
 
