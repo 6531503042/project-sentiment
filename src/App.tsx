@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -14,6 +15,8 @@ import Questions from "./pages/admin/question/Questions";
 import QuestionDashboard from "./pages/admin/question/QuestionDashboard";
 import Feedback from "./pages/admin/feedback/Feedback";
 import FeedbackDashboard from "./pages/admin/feedback/FeedbackDashboard";
+import ScoreManage from "./pages/admin/scores/ScoreManage";
+import ScoreDashboard from "./pages/admin/scores/ScoreDashboard";
 import EmployeeFeedback from "./pages/employee/EmployeeFeedback";
 import FeedbackForm from "./pages/employee/FeedbackForm";
 
@@ -39,6 +42,8 @@ const App: React.FC = () => {
                   <Route path="/admin/questions/dashboard" element={<QuestionDashboard />} />
                   <Route path="/admin/feedback" element={<Feedback />} />
                   <Route path="/admin/feedback/dashboard" element={<FeedbackDashboard />} />
+                  <Route path="/admin/scores" element={<ScoreManage />} />
+                  <Route path="/admin/scores/dashboard" element={<ScoreDashboard />} />
                   <Route path="/employee/feedback" element={<EmployeeFeedback />} />
                   <Route path="/employee/feedback/:id" element={<FeedbackForm />} />
                   <Route path="*" element={<NotFound />} />
